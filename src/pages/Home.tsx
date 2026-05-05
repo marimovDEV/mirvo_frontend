@@ -8,7 +8,7 @@ import { Truck, Shield, RotateCcw, ChevronRight, ChevronLeft, Search, Zap, Clock
 import { cn } from '@/src/lib/utils';
 import { useTranslation } from 'react-i18next';
 
-import { productsApi } from '@/src/lib/api';
+import { productsApi, getMediaUrl } from '@/src/lib/api';
 
 export default function HomePage() {
   const { t } = useTranslation();
