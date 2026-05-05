@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { PRODUCTS } from '@/src/constants';
-import { productsApi } from '@/src/lib/api';
+import { productsApi, getMediaUrl } from '@/src/lib/api';
 import { MarketHeader, MarketBottomNav } from '@/src/components/Navigation';
 import { ChevronLeft, Truck, Heart, Minus, Plus, TrendingUp, ShieldCheck, RefreshCcw, Zap, Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -107,7 +107,7 @@ export default function ProductDetailPage() {
                className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden bg-zinc-50 border border-black/5 group"
              >
                 <img 
-                  src={product.image} 
+                  src={getMediaUrl(product.image)} 
                   alt={product.name} 
                   className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                   referrerPolicy="no-referrer"
@@ -128,7 +128,7 @@ export default function ProductDetailPage() {
              <div className="grid grid-cols-4 gap-4 px-2">
                 {[1, 2, 3, 4].map((i) => (
                   <div key={i} className="aspect-square rounded-2xl bg-zinc-50 border border-black/5 overflow-hidden cursor-pointer hover:border-black/20 transition-all opacity-60 hover:opacity-100">
-                    <img src={product.image} className="w-full h-full object-cover" alt="" />
+                    <img src={getMediaUrl(product.image)} className="w-full h-full object-cover" alt="" />
                   </div>
                 ))}
              </div>

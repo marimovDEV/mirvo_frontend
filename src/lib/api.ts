@@ -1,5 +1,18 @@
 // MIRVO API Service - Backend bilan ulanish
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:4000/api/v1';
+const MEDIA_BASE = API_BASE.replace('/api/v1', '');
+
+export const getMediaUrl = (url: string | null | undefined) => {
+  if (!url) return 'https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?auto=format&fit=crop&q=80&w=400';
+  if (url.startsWith('http')) {
+    // Agar rasm localhost bo'lib kelsa va biz productionda bo'lsak, uni almashtiramiz
+    if (url.includes('localhost:4000') && !window.location.hostname.includes('localhost')) {
+       return url.replace('http://localhost:4000', MEDIA_BASE);
+    }
+    return url;
+  }
+  return `${MEDIA_BASE}${url.startsWith('/') ? '' : '/'}${url}`;
+};
 
 // ═══════════════════════════════════════════
 // HTTP Client

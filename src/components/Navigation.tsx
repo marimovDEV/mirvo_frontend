@@ -9,6 +9,7 @@ import i18n from '../i18n';
 import { motion, AnimatePresence } from 'motion/react';
 import { useCart } from '../contexts/CartContext';
 import { Logo } from './Logo';
+import { getMediaUrl } from '@/src/lib/api';
 
 export function MarketHeader() {
   const { t } = useTranslation();
@@ -125,7 +126,7 @@ export function MarketHeader() {
                       onClick={() => { setShowResults(false); setIsSearchActive(false); }}
                       className="flex items-center gap-3 px-4 py-3 hover:bg-zinc-50 transition-colors"
                     >
-                      <img src={product.image} className="w-10 h-10 rounded object-cover bg-zinc-100" alt="" />
+                      <img src={getMediaUrl(product.image)} className="w-10 h-10 rounded object-cover bg-zinc-100" alt="" />
                       <div className="flex-1 min-w-0">
                         <p className="text-[9px] font-bold text-black/30 uppercase tracking-widest">{product.brand}</p>
                         <p className="text-xs font-bold text-black truncate">{product.name}</p>

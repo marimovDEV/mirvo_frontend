@@ -265,7 +265,7 @@ export default function HomePage() {
                     {products.slice(4, 6).map(p => (
                       <div key={p.id} className="bg-white/5 border border-white/10 rounded-3xl p-6 flex items-center gap-6 group hover:bg-white/10 transition-all">
                          <div className="w-24 h-24 rounded-2xl overflow-hidden flex-shrink-0">
-                            <img src={p.image} className="w-full h-full object-cover" alt="" />
+                            <img src={getMediaUrl(p.image)} className="w-full h-full object-cover" alt="" />
                          </div>
                          <div className="space-y-2">
                             <p className="text-[8px] font-black uppercase tracking-widest text-white/40">{p.brand}</p>

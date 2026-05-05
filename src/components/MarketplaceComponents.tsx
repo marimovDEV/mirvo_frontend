@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useTranslation } from 'react-i18next';
 import { useCart } from '@/src/contexts/CartContext';
 import React, { useState } from 'react';
+import { getMediaUrl } from '@/src/lib/api';
 
 export function ProductCard({ product, loading }: { product: Product, loading?: boolean, key?: any }) {
   const { addToCart, toggleWishlist, isInWishlist } = useCart();
@@ -46,7 +47,7 @@ export function ProductCard({ product, loading }: { product: Product, loading?: 
         {/* Image container */}
         <div className="relative aspect-[3/4] overflow-hidden bg-stone">
           <img
-            src={product.image}
+            src={getMediaUrl(product.image)}
             alt={product.name}
             className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             referrerPolicy="no-referrer"
@@ -123,7 +124,7 @@ export function ProductCard({ product, loading }: { product: Product, loading?: 
               <div className="px-5 pb-6 space-y-5">
                 <div className="flex gap-3">
                   <div className="w-16 h-20 overflow-hidden bg-stone flex-shrink-0">
-                    <img src={product.image} className="w-full h-full object-cover" alt="" />
+                    <img src={getMediaUrl(product.image)} className="w-full h-full object-cover" alt="" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-[9px] font-medium text-black/30 uppercase tracking-widest">{product.brand}</p>
