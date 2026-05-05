@@ -1,5 +1,5 @@
 // MIRVO API Service - Backend bilan ulanish
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:4000/api/v1';
+const API_BASE = import.meta.env.VITE_API_URL || 'https://mapi.pizzacentergarden.uz/api/v1';
 const MEDIA_BASE = API_BASE.replace('/api/v1', '');
 
 export const getMediaUrl = (url: string | null | undefined) => {
