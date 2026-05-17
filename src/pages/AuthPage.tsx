@@ -64,21 +64,21 @@ export default function AuthPage() {
         navigate(returnUrl);
       }
     } else {
-      setError('Kod xato. Telegram botimizdan kodni oling.');
+      setError(t('auth.invalid_code'));
     }
   };
 
   const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!regData.firstName || !regData.lastName || !regData.region || !regData.password) {
-      setError('Barcha maydonlarni to\'ldiring');
+      setError(t('auth.all_fields'));
       return;
     }
     const success = await updateProfile(regData);
     if (success) {
       navigate(returnUrl);
     } else {
-      setError('Registratsiyada xatolik');
+      setError(t('auth.invalid_code'));
     }
   };
 
@@ -89,7 +89,7 @@ export default function AuthPage() {
     if (success) {
       navigate(returnUrl);
     } else {
-      setError('Telefon raqam yoki parol xato');
+      setError(t('auth.invalid_code'));
     }
   };
 
@@ -111,8 +111,8 @@ export default function AuthPage() {
                 <div className="w-20 h-20 bg-primary-light rounded-3xl mx-auto flex items-center justify-center text-primary">
                   <Phone size={40} />
                 </div>
-                <h2 className="text-3xl font-black uppercase tracking-tight text-on-surface">Kirish</h2>
-                <p className="text-on-surface-variant font-medium opacity-60">Tizimga kirish uchun telefon raqamingizni kiriting</p>
+                <h2 className="text-3xl font-black uppercase tracking-tight text-on-surface">{t('auth.login_title')}</h2>
+                <p className="text-on-surface-variant font-medium opacity-60">{t('auth.phone_sub')}</p>
               </div>
 
               <form onSubmit={handlePhoneSubmit} className="space-y-6">
@@ -137,12 +137,12 @@ export default function AuthPage() {
                     disabled={isLoading}
                     className="w-full bg-primary text-white py-5 rounded-2xl font-black text-lg shadow-xl shadow-primary/30 flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-all"
                   >
-                    {isLoading ? <Loader2 className="w-6 h-6 animate-spin" /> : <>Kodni olish <ChevronRight className="w-5 h-5" /></>}
+                    {isLoading ? <Loader2 className="w-6 h-6 animate-spin" /> : <>{t('auth.get_code')} <ChevronRight className="w-5 h-5" /></>}
                   </button>
 
                   <div className="relative py-2">
                     <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-100"></div></div>
-                    <div className="relative flex justify-center text-xs uppercase font-bold text-gray-400 bg-white px-4">yoki</div>
+                    <div className="relative flex justify-center text-xs uppercase font-bold text-gray-400 bg-white px-4">{t('auth.or_label')}</div>
                   </div>
 
                   <button
@@ -150,19 +150,19 @@ export default function AuthPage() {
                     onClick={() => setStep('login-pass')}
                     className="w-full bg-gray-50 text-gray-600 py-4 rounded-2xl font-bold hover:bg-gray-100 transition-all flex items-center justify-center gap-2"
                   >
-                    <Lock size={18} /> Parol orqali kirish
+                    <Lock size={18} /> {t('auth.login_with_pass')}
                   </button>
                 </div>
 
                 <div className="bg-blue-50 p-4 rounded-2xl border border-blue-100 space-y-2">
                   <p className="text-xs text-blue-700 font-bold flex items-center gap-2">
-                    <ExternalLink size={14} /> MUHIM ESLATMA
+                    <ExternalLink size={14} /> {t('auth.bot_note_title')}
                   </p>
                   <p className="text-[11px] text-blue-600 font-medium leading-relaxed">
-                    Kodni olish uchun avval Telegram botimizdan ro'yxatdan o'tgan bo'lishingiz kerak.
+                    {t('auth.bot_note_text')}
                   </p>
                   <a href="#" target="_blank" className="inline-block text-xs font-black text-blue-700 underline decoration-2">
-                    Botga o'tish
+                    {t('auth.bot_link')}
                   </a>
                 </div>
               </form>
@@ -181,12 +181,12 @@ export default function AuthPage() {
                 onClick={() => setStep('phone')}
                 className="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors font-bold text-sm"
               >
-                <ArrowLeft className="w-4 h-4" /> Telefonni o'zgartirish
+                <ArrowLeft className="w-4 h-4" /> {t('auth.change_phone')}
               </button>
 
               <div className="text-center space-y-2">
-                <h2 className="text-3xl font-black uppercase tracking-tight text-on-surface">Tasdiqlash</h2>
-                <p className="text-on-surface-variant font-medium opacity-60">+998 {phone} raqamiga yuborilgan 5 xonali kodni kiriting</p>
+                <h2 className="text-3xl font-black uppercase tracking-tight text-on-surface">{t('auth.verify_title')}</h2>
+                <p className="text-on-surface-variant font-medium opacity-60">+998 {phone} {t('auth.verify_sub')}</p>
               </div>
 
               <form onSubmit={handleCodeSubmit} className="space-y-6">
@@ -208,11 +208,11 @@ export default function AuthPage() {
                   disabled={isLoading}
                   className="w-full bg-primary text-white py-5 rounded-2xl font-black text-lg shadow-xl shadow-primary/30 flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-all"
                 >
-                  {isLoading ? <Loader2 className="w-6 h-6 animate-spin" /> : 'Tasdiqlash'}
+                  {isLoading ? <Loader2 className="w-6 h-6 animate-spin" /> : t('auth.verify_title')}
                 </button>
 
                 <p className="text-center text-xs font-bold text-gray-400 uppercase tracking-widest cursor-pointer hover:text-primary transition-colors">
-                  Kodni qayta yuborish (60s)
+                  {t('auth.resend_code')} (60s)
                 </p>
               </form>
             </motion.div>
@@ -227,16 +227,16 @@ export default function AuthPage() {
               className="space-y-8"
             >
               <div className="text-center space-y-2">
-                <h2 className="text-3xl font-black uppercase tracking-tight text-on-surface">Registratsiya</h2>
-                <p className="text-on-surface-variant font-medium opacity-60">Ma'lumotlaringizni kiriting</p>
+                <h2 className="text-3xl font-black uppercase tracking-tight text-on-surface">{t('auth.register_title')}</h2>
+                <p className="text-on-surface-variant font-medium opacity-60">{t('auth.register_sub')}</p>
               </div>
 
               <form onSubmit={handleRegisterSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="relative">
+                   <div className="relative">
                     <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <input
-                      placeholder="Ism"
+                      placeholder={t('auth.first_name')}
                       value={regData.firstName}
                       onChange={(e) => setRegData({...regData, firstName: e.target.value})}
                       className="w-full bg-gray-50 border-2 border-gray-100 focus:border-primary/30 rounded-xl py-4 pl-10 pr-4 font-bold text-sm outline-none"
@@ -245,7 +245,7 @@ export default function AuthPage() {
                   <div className="relative">
                     <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <input
-                      placeholder="Familiya"
+                      placeholder={t('auth.last_name')}
                       value={regData.lastName}
                       onChange={(e) => setRegData({...regData, lastName: e.target.value})}
                       className="w-full bg-gray-50 border-2 border-gray-100 focus:border-primary/30 rounded-xl py-4 pl-10 pr-4 font-bold text-sm outline-none"
@@ -260,7 +260,7 @@ export default function AuthPage() {
                     onChange={(e) => setRegData({...regData, region: e.target.value})}
                     className="w-full bg-gray-50 border-2 border-gray-100 focus:border-primary/30 rounded-xl py-4 pl-10 pr-4 font-bold text-sm outline-none appearance-none"
                   >
-                    <option value="">Viloyatni tanlang</option>
+                    <option value="">{t('auth.region_select')}</option>
                     {UZ_REGIONS.map(r => <option key={r} value={r}>{r}</option>)}
                   </select>
                 </div>
@@ -268,7 +268,7 @@ export default function AuthPage() {
                 <div className="relative">
                   <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <input
-                    placeholder="Shahar/Tuman"
+                    placeholder={t('auth.city_district')}
                     value={regData.city}
                     onChange={(e) => setRegData({...regData, city: e.target.value})}
                     className="w-full bg-gray-50 border-2 border-gray-100 focus:border-primary/30 rounded-xl py-4 pl-10 pr-4 font-bold text-sm outline-none"
@@ -279,7 +279,7 @@ export default function AuthPage() {
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <input
                     type="password"
-                    placeholder="Parol yarating"
+                    placeholder={t('auth.create_pass')}
                     value={regData.password}
                     onChange={(e) => setRegData({...regData, password: e.target.value})}
                     className="w-full bg-gray-50 border-2 border-gray-100 focus:border-primary/30 rounded-xl py-4 pl-10 pr-4 font-bold text-sm outline-none"
@@ -293,7 +293,7 @@ export default function AuthPage() {
                   disabled={isLoading}
                   className="w-full bg-gray-900 text-white py-5 rounded-2xl font-black text-lg shadow-xl shadow-gray-900/20 hover:scale-[1.02] active:scale-95 transition-all mt-4"
                 >
-                  {isLoading ? <Loader2 className="w-6 h-6 animate-spin" /> : 'Tayyor!'}
+                  {isLoading ? <Loader2 className="w-6 h-6 animate-spin" /> : t('auth.ready_btn')}
                 </button>
               </form>
             </motion.div>
@@ -311,12 +311,12 @@ export default function AuthPage() {
                 onClick={() => setStep('phone')}
                 className="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors font-bold text-sm"
               >
-                <ArrowLeft className="w-4 h-4" /> Orqaga
+                <ArrowLeft className="w-4 h-4" /> {t('common.cancel')}
               </button>
 
               <div className="text-center space-y-2">
-                <h2 className="text-3xl font-black uppercase tracking-tight text-on-surface">Kirish</h2>
-                <p className="text-on-surface-variant font-medium opacity-60">Parolingizni kiriting</p>
+                <h2 className="text-3xl font-black uppercase tracking-tight text-on-surface">{t('auth.login_title')}</h2>
+                <p className="text-on-surface-variant font-medium opacity-60">{t('auth.create_pass')}</p>
               </div>
 
               <form onSubmit={handlePassLoginSubmit} className="space-y-6">
@@ -335,7 +335,7 @@ export default function AuthPage() {
                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-primary w-5 h-5" />
                     <input
                       type="password"
-                      placeholder="Parol"
+                      placeholder={t('auth.create_pass')}
                       value={loginPass}
                       onChange={(e) => setLoginPass(e.target.value)}
                       className="w-full bg-primary-light border-2 border-primary/10 focus:border-primary/40 rounded-2xl py-5 pl-12 pr-6 text-lg font-bold outline-none transition-all text-on-surface"
@@ -350,7 +350,7 @@ export default function AuthPage() {
                   disabled={isLoading}
                   className="w-full bg-primary text-white py-5 rounded-2xl font-black text-lg shadow-xl shadow-primary/30 flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-all"
                 >
-                  {isLoading ? <Loader2 className="w-6 h-6 animate-spin" /> : 'Kirish'}
+                  {isLoading ? <Loader2 className="w-6 h-6 animate-spin" /> : t('auth.login_title')}
                 </button>
               </form>
             </motion.div>

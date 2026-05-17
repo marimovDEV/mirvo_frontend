@@ -41,14 +41,14 @@ export default function B2BPage() {
               <section className="text-center space-y-8 pt-6">
                  <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-zinc-50 border border-zinc-100 rounded-full">
                     <Sparkles className="w-3 h-3 text-zinc-400" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">Biznes Portal</span>
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">{t('b2b.home_title')}</span>
                  </div>
                  <div className="space-y-4">
                     <h1 className="text-5xl md:text-7xl font-display uppercase tracking-tighter leading-none text-black">
-                       Biznes uchun <br/> <span className="text-zinc-200">Xarid</span>
+                       {t('b2b.page_title')}
                     </h1>
                     <p className="text-zinc-400 font-medium text-lg leading-relaxed max-w-xs mx-auto">
-                       Do'kon, jamoa va resellerlar uchun maxsus ulgurji narxlar.
+                       {t('b2b.page_sub')}
                     </p>
                  </div>
                  
@@ -57,37 +57,37 @@ export default function B2BPage() {
                       onClick={() => document.getElementById('quick-form')?.scrollIntoView({ behavior: 'smooth' })}
                       className="w-full bg-black text-white py-5 rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] shadow-2xl shadow-black/10 active:scale-95 transition-all"
                     >
-                      Ulgurji narx so'rash
+                      {t('b2b.home_btn')}
                     </button>
                     <a 
                       href="https://t.me/mirvo_b2b" 
                       target="_blank"
                       className="w-full flex items-center justify-center gap-3 py-5 bg-zinc-50 border border-zinc-100 rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] hover:bg-zinc-100 transition-all"
                     >
-                      <MessageCircle className="w-4 h-4" /> Telegram Aloqa
+                      <MessageCircle className="w-4 h-4" /> Telegram
                     </a>
                  </div>
               </section>
 
               {/* 2. Compact Benefits */}
               <section className="grid grid-cols-3 gap-2">
-                 <BenefitItem icon={<TrendingUp />} label="Maxsus" sub="Narxlar" />
-                 <BenefitItem icon={<Truck />} label="Tezkor" sub="Yetkazish" />
-                 <BenefitItem icon={<Paintbrush />} label="Custom" sub="Dizayn" />
+                 <BenefitItem icon={<TrendingUp />} label={t('b2b.advantage_prices')} sub="" />
+                 <BenefitItem icon={<Truck />} label={t('b2b.advantage_delivery')} sub="" />
+                 <BenefitItem icon={<Paintbrush />} label={t('b2b.advantage_design')} sub="" />
               </section>
 
               {/* 3. Quick Stats Row */}
               <section className="flex items-center justify-around py-8 border-y border-zinc-50">
-                 <StatItem count="500+" label="Hamkor" />
-                 <StatItem count="10k+" label="Mahsulot" />
-                 <StatItem count="UZB" label="Barcha hudud" />
+                 <StatItem count="500+" label={t('b2b.business_types.shop')} />
+                 <StatItem count="10k+" label={t('common.products')} />
+                 <StatItem count="UZB" label={t('b2b.city')} />
               </section>
 
               {/* 4. Mini Lead Form */}
               <section id="quick-form" className="space-y-10 pt-4">
                  <div className="text-center space-y-2">
-                    <h2 className="text-2xl font-display uppercase tracking-tight">Ariza qoldiring</h2>
-                    <p className="text-zinc-400 text-sm font-medium">30 daqiqa ichida aloqaga chiqamiz.</p>
+                    <h2 className="text-2xl font-display uppercase tracking-tight">{t('b2b.form_title')}</h2>
+                    <p className="text-zinc-400 text-sm font-medium">{t('checkout.processing')}</p>
                  </div>
                  
                  <form onSubmit={handleSubmit} className="space-y-6">
@@ -95,13 +95,13 @@ export default function B2BPage() {
                        <input 
                          required 
                          type="text" 
-                         placeholder="Ismingiz" 
+                         placeholder={t('b2b.name')} 
                          className="w-full bg-zinc-50 border border-zinc-100 rounded-2xl p-5 text-sm font-bold outline-none focus:bg-white focus:border-black/10 transition-all"
                        />
                        <input 
                          required 
                          type="tel" 
-                         placeholder="Telefon raqamingiz" 
+                         placeholder={t('b2b.phone')} 
                          className="w-full bg-zinc-50 border border-zinc-100 rounded-2xl p-5 text-sm font-bold outline-none focus:bg-white focus:border-black/10 transition-all"
                        />
                     </div>
@@ -110,14 +110,14 @@ export default function B2BPage() {
                       disabled={loading}
                       className="w-full bg-black text-white py-6 rounded-2xl font-black uppercase text-[11px] tracking-[0.4em] active:scale-[0.98] transition-all disabled:opacity-50"
                     >
-                      {loading ? 'Yuborilmoqda...' : 'Ariza yuborish'}
+                      {loading ? '...' : t('b2b.submit')}
                     </button>
                  </form>
               </section>
 
               {/* Trust Sub-text */}
               <p className="text-center text-[9px] font-black uppercase tracking-[0.2em] text-zinc-200">
-                O'zbekiston bo'ylab professional kiyim ta'minoti.
+                {t('b2b.page_sub')}
               </p>
 
             </motion.div>
@@ -132,16 +132,13 @@ export default function B2BPage() {
                   <CheckCircle2 className="w-10 h-10 text-white" strokeWidth={1.5} />
                </div>
                <div className="space-y-4">
-                  <h2 className="text-4xl font-display uppercase tracking-tight">Qabul qilindi!</h2>
-                  <p className="text-zinc-400 font-medium text-lg leading-relaxed">
-                    Tez orada menejerimiz bog'lanadi.
-                  </p>
+                  <h2 className="text-4xl font-display uppercase tracking-tight">{t('b2b.success')}</h2>
                </div>
                <button
                   onClick={() => setSubmitted(false)}
                   className="text-zinc-400 text-[10px] font-black uppercase tracking-[0.3em] underline underline-offset-8"
                >
-                  Yangi ariza
+                  {t('common.search_placeholder')}
                </button>
             </motion.div>
           )}

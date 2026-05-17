@@ -73,8 +73,8 @@ export default function SearchPage() {
               {/* Recent Searches - Chips */}
               <section>
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-300">Oxirgi qidiruvlar</h3>
-                  <button onClick={() => setRecentSearches([])} className="text-[10px] font-bold text-zinc-400 hover:text-black transition-colors uppercase tracking-widest">Tozalash</button>
+                  <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-300">{t('search.recent_searches')}</h3>
+                  <button onClick={() => setRecentSearches([])} className="text-[10px] font-bold text-zinc-400 hover:text-black transition-colors uppercase tracking-widest">{t('search.clear_history')}</button>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {recentSearches.map((s, i) => (
@@ -83,13 +83,13 @@ export default function SearchPage() {
                       <X className="w-3 h-3 text-zinc-400 cursor-pointer" />
                     </div>
                   ))}
-                  {recentSearches.length === 0 && <p className="text-xs text-zinc-300 italic font-medium">Qidiruv tarixi bo'sh</p>}
+                  {recentSearches.length === 0 && <p className="text-xs text-zinc-300 italic font-medium">{t('search.empty_history')}</p>}
                 </div>
               </section>
 
               {/* Trending - Card Style */}
               <section>
-                <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-300 mb-5">Trenddagi to'plamlar</h3>
+                <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-300 mb-5">{t('search.trending_collections')}</h3>
                 <div className="grid grid-cols-2 gap-3">
                   {trendingItems.map((item, i) => (
                     <button 
@@ -110,7 +110,7 @@ export default function SearchPage() {
 
               {/* Explore Disciplines - Premium Cards */}
               <section>
-                <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-300 mb-5">Yo'nalishlar bo'yicha</h3>
+                <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-300 mb-5">{t('search.by_discipline')}</h3>
                 <div className="space-y-3">
                   {SPORTS.slice(0, 4).map((sport) => (
                     <button 
@@ -140,10 +140,10 @@ export default function SearchPage() {
             >
               <div className="flex items-center justify-between mb-8 pb-4 border-b border-zinc-100">
                 <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-400">
-                  Natijalar ({filteredProducts.length})
+                  {t('search.results_count', { count: filteredProducts.length })}
                 </h3>
                 <button className="flex items-center gap-2 text-[10px] font-black uppercase text-black hover:opacity-60 transition-opacity">
-                  <Filter className="w-3.5 h-3.5" /> Saralash
+                  <Filter className="w-3.5 h-3.5" /> {t('home.filter')}
                 </button>
               </div>
 
@@ -159,14 +159,14 @@ export default function SearchPage() {
                     <Search className="w-8 h-8 text-zinc-200" />
                   </div>
                   <div className="space-y-1">
-                    <p className="text-sm font-bold text-black">Mahsulot topilmadi</p>
-                    <p className="text-xs text-zinc-400">"{query}" bo'yicha hech narsa topilmadi</p>
+                    <p className="text-sm font-bold text-black">{t('search.no_results')}</p>
+                    <p className="text-xs text-zinc-400">{t('search.no_results_sub', { query })}</p>
                   </div>
                   <button 
                     onClick={() => setQuery('')}
                     className="text-[11px] font-black uppercase tracking-[0.2em] text-primary border-b-2 border-primary pb-1"
                   >
-                    Boshidan boshlash
+                    {t('search.start_over')}
                   </button>
                 </div>
               )}

@@ -22,27 +22,36 @@ export default function CatalogPage() {
   const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState('newest');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [products, setProducts] = useState<any[]>(PRODUCTS);
+
+  useEffect(() => {
+    import('@/src/lib/api').then(({ productsApi }) => {
+      productsApi.getAll({ limit: 100 }).then((res: any) => {
+        const data = res?.data || (Array.isArray(res) ? res : []);
+        if (data.length > 0) setProducts(data);
+      }).catch(() => {});
+    });
+  }, []);
 
   const filteredProducts = useMemo(() => {
-    let result = [...PRODUCTS];
+    let result = [...products];
 
     if (activeCategory !== 'all') {
-      result = result.filter(p => p.subCategory === activeCategory);
+      result = result.filter(p => p.subCategory === activeCategory || p.category?.slug === activeCategory);
     }
     if (activeSport !== 'all') {
-      result = result.filter(p => p.sport === activeSport);
+      result = result.filter(p => p.sport === activeSport || p.sport?.slug === activeSport);
     }
     if (initialFilter === 'sale') {
-      // For now, let's say some products are on sale. 
-      // In real app, we would have a field 'isSale' or 'discountPrice'
-      result = result.slice(0, 10); // Mocking sale items
+      result = result.filter(p => p.salePrice || p.isTrending);
+      if (result.length === 0) result = products.slice(0, 10);
     }
 
-    if (sortBy === 'price-low') result.sort((a, b) => a.price - b.price);
-    if (sortBy === 'price-high') result.sort((a, b) => b.price - a.price);
+    if (sortBy === 'price-low') result.sort((a, b) => Number(a.price) - Number(b.price));
+    if (sortBy === 'price-high') result.sort((a, b) => Number(b.price) - Number(a.price));
 
     return result;
-  }, [activeCategory, activeSport, initialFilter, sortBy]);
+  }, [activeCategory, activeSport, initialFilter, sortBy, products]);
 
   const updateFilters = (key: string, value: string) => {
     const newParams = new URLSearchParams(searchParams);
@@ -60,10 +69,10 @@ export default function CatalogPage() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
             <div className="space-y-4">
                 <p className="text-[10px] font-black text-zinc-300 uppercase tracking-[0.4em]">
-                  {initialFilter === 'sale' ? 'Flash Offers' : 'The Collection'}
+                  {initialFilter === 'sale' ? t('home.flash_sale') : t('home.discovery')}
                 </p>
                 <h1 className="text-5xl md:text-8xl font-display uppercase tracking-tighter leading-none">
-                  {initialFilter === 'sale' ? 'Chegirmalar' : t(`categories.${activeCategory}`)}
+                  {initialFilter === 'sale' ? t('home.flash_sale') : t(`categories.${activeCategory}`)}
                 </h1>
             </div>
             <div className="flex items-center gap-4">
@@ -74,7 +83,7 @@ export default function CatalogPage() {
                    showFilters ? "bg-black text-white" : "bg-zinc-50 text-black border border-zinc-100"
                  )}
                >
-                 <SlidersHorizontal className="w-4 h-4" /> Filter
+                 <SlidersHorizontal className="w-4 h-4" /> {t('home.filter')}
                </button>
                <div className="hidden md:flex bg-zinc-50 border border-zinc-100 rounded-2xl p-1">
                   <button onClick={() => setViewMode('grid')} className={cn("p-3 rounded-xl transition-all", viewMode === 'grid' ? "bg-white shadow-sm text-black" : "text-zinc-300")}>
@@ -97,7 +106,7 @@ export default function CatalogPage() {
               className="overflow-hidden mb-12 border-b border-zinc-100"
             >
               <div className="py-10 grid grid-cols-1 md:grid-cols-3 gap-12">
-                 <FilterGroup title="Kategoriyalar">
+                 <FilterGroup title={t('common.categories')}>
                     {CATEGORIES.map(cat => (
                       <button 
                         key={cat.id} 
@@ -108,12 +117,12 @@ export default function CatalogPage() {
                       </button>
                     ))}
                  </FilterGroup>
-                 <FilterGroup title="Sport yo'nalishi">
+                 <FilterGroup title={t('home.all_sports')}>
                     <button 
                       onClick={() => { setActiveSport('all'); updateFilters('sport', 'all'); }}
                       className={cn("text-xs font-bold uppercase tracking-wider block text-left transition-colors", activeSport === 'all' ? "text-black" : "text-zinc-300 hover:text-black")}
                     >
-                      Hammasi
+                      {t('common.all')}
                     </button>
                     {SPORTS.map(sport => (
                       <button 
@@ -125,12 +134,12 @@ export default function CatalogPage() {
                       </button>
                     ))}
                  </FilterGroup>
-                 <FilterGroup title="Saralash">
+                 <FilterGroup title={t('home.filter')}>
                     {[
-                      { id: 'newest', name: 'Yangi kelganlar' },
-                      { id: 'price-low', name: 'Arzonroq' },
-                      { id: 'price-high', name: 'Qimmatroq' },
-                      { id: 'popular', name: 'Ommabop' }
+                      { id: 'newest', name: t('home.new') },
+                      { id: 'price-low', name: t('home.low_price') },
+                      { id: 'price-high', name: t('home.high_price') },
+                      { id: 'popular', name: t('home.popular') }
                     ].map(s => (
                       <button 
                         key={s.id} 
@@ -169,13 +178,13 @@ export default function CatalogPage() {
              <div className="w-24 h-24 bg-zinc-50 rounded-full flex items-center justify-center mx-auto mb-8">
                 <LayoutGrid size={32} className="text-zinc-200" />
              </div>
-             <h2 className="text-xl font-bold uppercase tracking-widest text-black">Mahsulotlar topilmadi</h2>
-             <p className="text-zinc-400 max-w-xs mx-auto">Tanlangan parametrlar bo'yicha hech qanday mahsulot mavjud emas.</p>
+             <h2 className="text-xl font-bold uppercase tracking-widest text-black">{t('home.not_found')}</h2>
+             <p className="text-zinc-400 max-w-xs mx-auto">{t('home.no_products')}</p>
              <button 
                onClick={() => { setActiveCategory('all'); setActiveSport('all'); setSearchParams({}); }}
                className="text-[10px] font-black uppercase tracking-[0.3em] border-b-2 border-black pb-2"
              >
-               Filtrlarni tozalash
+               {t('home.reset_all')}
              </button>
           </div>
         )}

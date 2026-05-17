@@ -22,25 +22,25 @@ export default function HomePage() {
   const slides = [
     {
       id: 1,
-      title: "🔥 30% CHEGIRMA",
-      sub: "Premium Erkaklar Kiyimlari. Faqat bugun.",
-      cta: "Sotib olish",
+      title: t('home.hero_slide_1_title'),
+      sub: t('home.hero_slide_1_sub'),
+      cta: t('home.view_more'),
       img: "https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?auto=format&fit=crop&q=80&w=1200",
       color: "bg-zinc-900"
     },
     {
       id: 2,
-      title: "⚡ MMA GEAR PRO",
-      sub: "Maksimal unumdorlik uchun professional jihozlar.",
-      cta: "Ko'rish",
+      title: t('home.hero_slide_2_title'),
+      sub: t('home.hero_slide_2_sub'),
+      cta: t('home.view_more'),
       img: "https://images.unsplash.com/photo-1552072092-7f9b8d63efcb?auto=format&fit=crop&q=80&w=1200",
       color: "bg-blue-900"
     },
     {
       id: 3,
-      title: "BEPUL YETKAZISH 🚀",
-      sub: "Toshkent bo'ylab 24 soat ichida. Shoshiling!",
-      cta: "Batafsil",
+      title: t('home.hero_slide_3_title'),
+      sub: t('home.hero_slide_3_sub'),
+      cta: t('home.details'),
       img: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=1200",
       color: "bg-zinc-800"
     }
@@ -82,7 +82,12 @@ export default function HomePage() {
     return result;
   }, [activeCategory, activeSportFilter, products]);
 
-  const bestsellers = useMemo(() => products.filter(p => p.isBestseller).slice(0, 4), [products]);
+  const bestsellers = useMemo(() => {
+    const marked = products.filter(p => p.isBestseller);
+    if (marked.length > 0) return marked.slice(0, 4);
+    // Fallback: show top-rated or top-selling products
+    return [...products].sort((a, b) => (b.salesCount || b.rating || 0) - (a.salesCount || a.rating || 0)).slice(0, 4);
+  }, [products]);
 
   return (
     <div className="bg-white min-h-screen">
@@ -156,16 +161,16 @@ export default function HomePage() {
                className="bg-zinc-50 border border-zinc-100 rounded-2xl px-5 h-12 flex items-center gap-3 cursor-pointer group hover:bg-zinc-100 transition-all"
              >
                 <Search className="w-4 h-4 text-zinc-300 group-hover:text-black transition-colors" />
-                <span className="text-[11px] font-black uppercase tracking-widest text-zinc-300 group-hover:text-black/40">Mahsulot yoki brend qidiring...</span>
+                <span className="text-[11px] font-black uppercase tracking-widest text-zinc-300 group-hover:text-black/40">{t('common.search_placeholder')}</span>
              </div>
              
              {/* Search value helpers - Mobile only */}
              <div className="flex items-center gap-4 overflow-x-auto no-scrollbar md:hidden">
                 <button onClick={() => navigate('/deals')} className="flex items-center gap-1.5 whitespace-nowrap text-[9px] font-black uppercase tracking-widest text-primary">
-                  <Zap className="w-3 h-3 fill-primary" /> 🔥 Bugungi chegirmalar
+                  <Zap className="w-3 h-3 fill-primary" /> 🔥 {t('home.flash_sale')}
                 </button>
                 <button onClick={() => navigate('/catalog')} className="flex items-center gap-1.5 whitespace-nowrap text-[9px] font-black uppercase tracking-widest text-zinc-400">
-                  <Star className="w-3 h-3" /> ⚡ Eng ko‘p sotilganlar
+                  <Star className="w-3 h-3" /> ⚡ {t('home.popular')}
                 </button>
              </div>
            </div>
@@ -202,7 +207,7 @@ export default function HomePage() {
             >
               <div className="max-w-screen-xl mx-auto">
                 <div className="flex items-center justify-between mb-8">
-                  <h2 className="font-display text-3xl uppercase tracking-tight text-black">Sport Collections</h2>
+                  <h2 className="font-display text-3xl uppercase tracking-tight text-black">{t('home.all_sports')}</h2>
                   <div className="flex-1 h-px bg-black/5 ml-8" />
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
@@ -249,16 +254,16 @@ export default function HomePage() {
                        <span className="text-[10px] font-black uppercase tracking-widest">{formatTime(timeLeft)}</span>
                     </div>
                     <h2 className="text-5xl md:text-7xl font-display uppercase tracking-tighter leading-none">
-                       Kunlik <br/> Chegirmalar 🔥
+                       {t('home.flash_deals_title').split(' ').map((word, i) => i === 1 ? <React.Fragment key={i}><br/> {word}</React.Fragment> : <span key={i}>{word} </span>)}
                     </h2>
                     <p className="text-emerald-400 font-serif italic text-lg md:text-xl max-w-sm">
-                       70% gacha chegirma. <br className="md:hidden" /> Faqat 24 soat!
+                       {t('home.flash_deals_sub')}
                     </p>
                      <button 
                         onClick={() => navigate('/deals')}
                         className="bg-white text-black px-10 py-4 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] shadow-2xl shadow-white/20 hover:scale-105 active:scale-95 transition-all"
                      >
-                        Sotib olish — Step 01
+                        {t('common.buy')}
                      </button>
                  </div>
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full md:w-auto">
@@ -271,8 +276,8 @@ export default function HomePage() {
                             <p className="text-[8px] font-black uppercase tracking-widest text-white/40">{p.brand}</p>
                             <h4 className="font-bold text-sm uppercase">{p.name}</h4>
                             <div className="flex items-baseline gap-3">
-                               <span className="text-lg font-black">{p.price.toLocaleString()} so'm</span>
-                               <span className="text-[10px] text-white/30 line-through">{(p.price * 1.5).toLocaleString()} so'm</span>
+                               <span className="text-lg font-black">{Math.round(Number(p.price)).toLocaleString()} {t('home.currency')}</span>
+                               <span className="text-[10px] text-white/30 line-through">{Math.round(Number(p.price) * 1.5).toLocaleString()} {t('home.currency')}</span>
                             </div>
                          </div>
                       </div>
@@ -289,15 +294,15 @@ export default function HomePage() {
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
                     <Zap className="w-4 h-4 text-black fill-black" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-300">Mashhur</span>
+                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-300">{t('home.popular')}</span>
                   </div>
-                  <h2 className="text-4xl md:text-6xl font-display uppercase tracking-tighter text-black">Bestseller Mahsulotlar</h2>
+                  <h2 className="text-4xl md:text-6xl font-display uppercase tracking-tighter text-black">{t('home.bestsellers_title')}</h2>
                 </div>
                 <button 
                   onClick={() => navigate('/catalog')}
                   className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-zinc-400 group hover:text-black transition-colors"
                 >
-                  Hammasini ko'rish <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  {t('common.view_all')} <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
              </div>
              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-10">
@@ -311,11 +316,11 @@ export default function HomePage() {
            <div className="max-w-screen-xl mx-auto">
              <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
                 <div className="space-y-3">
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-300">Yangi</span>
-                  <h2 className="text-4xl md:text-6xl font-display uppercase tracking-tighter text-black">Yangi Kelganlar</h2>
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-300">{t('home.new')}</span>
+                  <h2 className="text-4xl md:text-6xl font-display uppercase tracking-tighter text-black">{t('home.new_arrivals_title')}</h2>
                 </div>
                 <button className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-zinc-400 group hover:text-black transition-colors">
-                  To'liq katalog <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  {t('home.all_catalog')} <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
              </div>
              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-10">
@@ -335,9 +340,9 @@ export default function HomePage() {
         <section className="py-12 md:py-20 bg-zinc-50 px-4 md:px-8">
            <div className="max-w-screen-xl mx-auto">
               <div className="grid grid-cols-3 md:grid-cols-3 gap-4 md:gap-12">
-                 <TrustItem icon={<Truck />} title="1 kunda" sub="Yetkazish" />
-                 <TrustItem icon={<Shield />} title="Xavfsiz" sub="To'lov" />
-                 <TrustItem icon={<RotateCcw />} title="10 kun" sub="Qaytarish" />
+                 <TrustItem icon={<Truck />} title={t('home.trust_delivery_time')} sub={t('home.trust_delivery_label')} />
+                 <TrustItem icon={<Shield />} title={t('home.trust_payment_title')} sub={t('home.trust_payment_label')} />
+                 <TrustItem icon={<RotateCcw />} title={t('home.trust_return_title')} sub={t('home.trust_return_label')} />
               </div>
            </div>
         </section>
@@ -349,7 +354,7 @@ export default function HomePage() {
                  <div className="space-y-4 text-center md:text-left w-full md:w-auto">
                     <h3 className="font-display text-3xl uppercase tracking-tighter text-black">MIRVO</h3>
                     <p className="text-zinc-400 font-medium text-[11px] uppercase tracking-widest max-w-[200px] mx-auto md:mx-0">
-                       Premium erkaklar kiyimlari.
+                       {t('home.footer_description')}
                     </p>
                     <div className="flex justify-center md:justify-start gap-6 pt-2">
                        {['Instagram', 'Telegram'].map(s => (
@@ -362,19 +367,23 @@ export default function HomePage() {
 
                  {/* Desktop Links / Mobile Accordion */}
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full md:w-auto">
-                    <FooterSection title="Bo'limlar">
+                    <FooterSection title={t('home.footer_sections_title')}>
                         {[
-                          { name: 'Katalog', path: '/catalog' },
-                          { name: 'Biznes uchun', path: '/b2b' },
-                          { name: 'Chegirmalar', path: '/deals' }
+                          { name: t('common.categories'), path: '/catalog' },
+                          { name: t('b2b.home_btn'), path: '/b2b' },
+                          { name: t('home.flash_sale'), path: '/deals' }
                         ].map(l => (
                            <li key={l.name}><button onClick={() => navigate(l.path)} className="text-[11px] font-black text-black/40 hover:text-black uppercase tracking-widest">{l.name}</button></li>
                         ))}
                     </FooterSection>
-                    <FooterSection title="Yordam">
-                       {['Yetkazish', 'Qaytarish', 'Kontakt'].map(l => (
-                          <li key={l}><a href="#" className="text-[11px] font-black text-black/40 hover:text-black uppercase tracking-widest">{l}</a></li>
-                       ))}
+                    <FooterSection title={t('home.footer_help_title')}>
+                       {[
+                          { name: t('home.footer_help_delivery'), path: '#' },
+                          { name: t('home.footer_help_return'), path: '#' },
+                          { name: t('home.footer_help_contact'), path: '#' }
+                       ].map(l => (
+                          <li key={l.name}><a href={l.path} className="text-[11px] font-black text-black/40 hover:text-black uppercase tracking-widest">{l.name}</a></li>
+                        ))}
                     </FooterSection>
                  </div>
               </div>
@@ -382,8 +391,8 @@ export default function HomePage() {
               <div className="pt-8 border-t border-zinc-50 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
                  <p className="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-200">© 2026 MIRVO</p>
                  <div className="flex gap-6">
-                    <p className="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-200 cursor-pointer">Privacy</p>
-                    <p className="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-200 cursor-pointer">Terms</p>
+                    <p className="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-200 cursor-pointer">{t('home.footer_privacy')}</p>
+                    <p className="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-200 cursor-pointer">{t('home.footer_terms')}</p>
                  </div>
               </div>
            </div>

@@ -132,9 +132,9 @@ export default function CheckoutPage() {
   };
 
   const steps = [
-    { id: 1, title: 'Aloqa' },
-    { id: 2, title: 'Manzil' },
-    { id: 3, title: 'To‘lov' }
+    { id: 1, title: t('auth.verify_title') },
+    { id: 2, title: t('checkout.step_2_title') },
+    { id: 3, title: t('checkout.step_3_title') }
   ];
 
   return (
@@ -144,9 +144,9 @@ export default function CheckoutPage() {
          <button onClick={() => step > 1 && step < 100 ? prevStep() : navigate(-1)} className="p-2 -ml-2 text-black hover:opacity-40 transition-opacity">
            <ChevronLeft className="w-6 h-6" />
          </button>
-         <h1 className="text-[11px] font-black uppercase tracking-[0.3em] text-black">Checkout</h1>
+         <h1 className="text-[11px] font-black uppercase tracking-[0.3em] text-black">{t('checkout.title')}</h1>
          <div className="flex items-center gap-2">
-            <span className="text-[10px] font-black bg-zinc-100 px-3 py-1 rounded-full uppercase tracking-widest">{cartCount} items</span>
+            <span className="text-[10px] font-black bg-zinc-100 px-3 py-1 rounded-full uppercase tracking-widest">{cartCount} {t('common.products')}</span>
          </div>
       </div>
 
@@ -186,10 +186,10 @@ export default function CheckoutPage() {
               initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
               className="space-y-12"
             >
-              <div className="space-y-4">
+               <div className="space-y-4">
                 <p className="text-[10px] font-black text-zinc-300 uppercase tracking-[0.4em]">Step 01 / 03</p>
-                <h2 className="text-4xl md:text-5xl font-display uppercase tracking-tighter leading-none">Aloqa ma'lumotlari</h2>
-                <p className="text-zinc-400 font-serif italic text-lg leading-relaxed">Buyurtma holatini kuzatish uchun raqamingizni kiriting.</p>
+                <h2 className="text-4xl md:text-5xl font-display uppercase tracking-tighter leading-none">{t('profile.phone')}</h2>
+                <p className="text-zinc-400 font-serif italic text-lg leading-relaxed">{t('auth.verify_sub')}</p>
               </div>
               
               <div className="space-y-8">
@@ -200,13 +200,13 @@ export default function CheckoutPage() {
                   onChange={(e) => setPhone(e.target.value)}
                   className="w-full bg-zinc-50 border border-zinc-100 rounded-[2.5rem] px-8 py-7 text-2xl font-display transition-all focus:bg-white focus:border-black/20 outline-none shadow-inner"
                 />
-                <button
-                  onClick={nextStep}
-                  disabled={phone.length < 9}
-                  className="w-full bg-black text-white py-6 rounded-2xl font-black uppercase text-[10px] tracking-[0.3em] shadow-2xl shadow-black/20 active:scale-[0.98] transition-all disabled:opacity-20"
-                >
-                  Davom etish — Step 02
-                </button>
+                 <button
+                   onClick={nextStep}
+                   disabled={phone.length < 9}
+                   className="w-full bg-black text-white py-6 rounded-2xl font-black uppercase text-[10px] tracking-[0.3em] shadow-2xl shadow-black/20 active:scale-[0.98] transition-all disabled:opacity-20"
+                 >
+                   {t('checkout.continue')}
+                 </button>
               </div>
             </motion.div>
           )}
@@ -217,55 +217,61 @@ export default function CheckoutPage() {
               initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
               className="space-y-12"
             >
-              <div className="space-y-4">
+               <div className="space-y-4">
                 <p className="text-[10px] font-black text-zinc-300 uppercase tracking-[0.4em]">Step 02 / 03</p>
-                <h2 className="text-4xl md:text-5xl font-display uppercase tracking-tighter leading-none">Yetkazib berish</h2>
-                <p className="text-zinc-400 font-serif italic text-lg leading-relaxed">Mahsulotlarni qayerga yuboramiz?</p>
+                <h2 className="text-4xl md:text-5xl font-display uppercase tracking-tighter leading-none">{t('checkout.step_2_title')}</h2>
+                <p className="text-zinc-400 font-serif italic text-lg leading-relaxed">{t('checkout.step_2_sub')}</p>
               </div>
 
               <div className="space-y-6">
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                       <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-2">Viloyat</label>
-                       <select 
-                          value={selectedRegion}
-                          onChange={(e) => { setSelectedRegion(e.target.value); setSelectedCity(''); }}
-                          className="w-full p-5 bg-zinc-50 border border-zinc-100 rounded-2xl text-xs font-bold outline-none focus:bg-white focus:border-black/20 transition-all"
-                       >
-                          <option value="">Tanlang</option>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                     <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-2">{t('checkout.region_label')}</label>
+                        <select 
+                           value={selectedRegion}
+                          onChange={(e) => { 
+                            const rid = e.target.value;
+                            setSelectedRegion(rid);
+                            const reg = REGIONS.find(r => r.id === rid);
+                            if (reg && reg.cities.length === 1) setSelectedCity(reg.cities[0]);
+                            else setSelectedCity('');
+                          }}
+                           className="w-full p-5 bg-zinc-50 border border-zinc-100 rounded-2xl text-xs font-bold outline-none focus:bg-white focus:border-black/20 transition-all"
+                        >
+                           <option value="">{t('categories.all')}</option>
                           {REGIONS.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
                        </select>
-                    </div>
-                    <div className="space-y-2">
-                       <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-2">Shahar / Tuman</label>
-                       <select 
-                          value={selectedCity}
+                     </div>
+                     <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-2">{t('checkout.city_label')}</label>
+                        <select 
+                           value={selectedCity}
                           onChange={(e) => setSelectedCity(e.target.value)}
-                          disabled={!selectedRegion}
-                          className="w-full p-5 bg-zinc-50 border border-zinc-100 rounded-2xl text-xs font-bold outline-none focus:bg-white focus:border-black/20 transition-all disabled:opacity-30"
-                       >
-                          <option value="">Tanlang</option>
+                           disabled={!selectedRegion}
+                           className="w-full p-5 bg-zinc-50 border border-zinc-100 rounded-2xl text-xs font-bold outline-none focus:bg-white focus:border-black/20 transition-all disabled:opacity-30"
+                        >
+                           <option value="">{t('categories.all')}</option>
                           {REGIONS.find(r => r.id === selectedRegion)?.cities.map(c => <option key={c} value={c}>{c}</option>)}
                        </select>
                     </div>
-                 </div>
-
-                 <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-2">Aniq manzil</label>
-                    <textarea 
-                      value={detailedAddress}
-                      onChange={(e) => setDetailedAddress(e.target.value)}
-                      placeholder="Mahalla, ko'cha, uy raqami..."
+                  </div>
+ 
+                  <div className="space-y-2">
+                     <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-2">{t('checkout.address_label')}</label>
+                     <textarea 
+                       value={detailedAddress}
+                       onChange={(e) => setDetailedAddress(e.target.value)}
+                       placeholder={t('checkout.address_placeholder_detailed')}
                       className="w-full bg-zinc-50 border border-zinc-100 rounded-[2.5rem] p-8 text-base font-medium outline-none focus:border-black/20 focus:bg-white h-40 shadow-inner transition-all"
                     />
                  </div>
               </div>
 
-              {selectedCity && detailedAddress && (
-                <button onClick={() => { setAddress(`${selectedRegion}, ${selectedCity}, ${detailedAddress}`); nextStep(); }} className="w-full bg-black text-white py-6 rounded-2xl font-black uppercase text-[10px] tracking-[0.3em] shadow-2xl shadow-black/20 active:scale-[0.98] transition-all">
-                  To'lovga o'tish — Step 03
-                </button>
-              )}
+               {selectedCity && detailedAddress && (
+                 <button onClick={() => { const regionName = REGIONS.find(r => r.id === selectedRegion)?.name || selectedRegion; setAddress(`${regionName}, ${selectedCity}, ${detailedAddress}`); nextStep(); }} className="w-full bg-black text-white py-6 rounded-2xl font-black uppercase text-[10px] tracking-[0.3em] shadow-2xl shadow-black/20 active:scale-[0.98] transition-all">
+                   {t('checkout.goto_payment')}
+                 </button>
+               )}
             </motion.div>
           )}
 
@@ -275,17 +281,17 @@ export default function CheckoutPage() {
               initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
               className="space-y-12"
             >
-              <div className="space-y-4">
+               <div className="space-y-4">
                 <p className="text-[10px] font-black text-zinc-300 uppercase tracking-[0.4em]">Step 03 / 03</p>
-                <h2 className="text-4xl md:text-5xl font-display uppercase tracking-tighter leading-none">To'lov usuli</h2>
-                <p className="text-zinc-400 font-serif italic text-lg leading-relaxed">O'zingizga qulay usulni tanlang.</p>
+                <h2 className="text-4xl md:text-5xl font-display uppercase tracking-tighter leading-none">{t('checkout.step_3_title')}</h2>
+                <p className="text-zinc-400 font-serif italic text-lg leading-relaxed">{t('checkout.step_3_sub')}</p>
               </div>
 
-              <div className="grid grid-cols-1 gap-4">
-                 <PaymentOption id="click" label="Click App" active={paymentMethod === 'click'} onClick={() => setPaymentMethod('click')} image="https://click.uz/static/img/logo.png" />
-                 <PaymentOption id="payme" label="Payme" active={paymentMethod === 'payme'} onClick={() => setPaymentMethod('payme')} image="https://cdn.payme.uz/logo/payme_logo_main.png" />
-                 <PaymentOption id="cash" label="Qabul qilganda naqd" sub="Kuryerga to'lov" active={paymentMethod === 'cash'} onClick={() => setPaymentMethod('cash')} />
-              </div>
+               <div className="grid grid-cols-1 gap-4">
+                  <PaymentOption id="click" label={t('checkout.payment_click')} active={paymentMethod === 'click'} onClick={() => setPaymentMethod('click')} image="https://click.uz/static/img/logo.png" />
+                  <PaymentOption id="payme" label={t('checkout.payment_payme')} active={paymentMethod === 'payme'} onClick={() => setPaymentMethod('payme')} image="https://cdn.payme.uz/logo/payme_logo_main.png" />
+                  <PaymentOption id="cash" label={t('checkout.payment_cash')} sub={t('checkout.payment_cash_sub')} active={paymentMethod === 'cash'} onClick={() => setPaymentMethod('cash')} />
+               </div>
 
               {paymentMethod && (
                 <div className="pt-8 space-y-8">
@@ -306,7 +312,7 @@ export default function CheckoutPage() {
                                disabled={promoLoading || !promoCode}
                                className="absolute right-2 top-2 bottom-2 px-6 bg-black text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all disabled:opacity-20"
                             >
-                               {promoLoading ? '...' : "Qo'llash"}
+                               {promoLoading ? '...' : t('checkout.promo_apply')}
                             </button>
                          </div>
                          {promoError && <p className="text-[10px] font-bold text-red-500 ml-4">{promoError}</p>}
@@ -319,7 +325,7 @@ export default function CheckoutPage() {
                             </div>
                             <div>
                                <p className="text-[10px] font-black uppercase tracking-widest text-green-600">{appliedPromo.code}</p>
-                               <p className="text-[9px] font-bold text-green-500">Promokod qo'llanildi</p>
+                               <p className="text-[9px] font-bold text-green-500">{t('checkout.promo_success')}</p>
                             </div>
                          </div>
                          <button onClick={() => { setAppliedPromo(null); setDiscount(0); setPromoCode(''); }} className="p-2 text-green-300 hover:text-green-600 transition-colors">
@@ -330,23 +336,23 @@ export default function CheckoutPage() {
 
                     <div className="space-y-4 pt-2">
                        <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-zinc-400">
-                         <span>Savatcha</span>
-                         <span className="text-black">{cartTotal.toLocaleString()} so'm</span>
+                         <span>{t('common.cart')}</span>
+                         <span className="text-black">{cartTotal.toLocaleString()} {t('home.currency')}</span>
                        </div>
                        {discount > 0 && (
                           <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-green-500">
-                            <span>Chegirma</span>
-                            <span>-{discount.toLocaleString()} so'm</span>
+                            <span>{t('checkout.discount')}</span>
+                            <span>-{discount.toLocaleString()} {t('home.currency')}</span>
                           </div>
                        )}
                        <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-zinc-400">
-                         <span>Yetkazish</span>
-                         <span className="text-black">{deliveryCost.toLocaleString()} so'm</span>
+                         <span>{t('checkout.delivery_fee')}</span>
+                         <span className="text-black">{deliveryCost.toLocaleString()} {t('home.currency')}</span>
                        </div>
                        <div className="h-px bg-zinc-200" />
                        <div className="flex justify-between items-center pt-2">
-                         <span className="text-xs font-black uppercase tracking-[0.2em] text-black">Jami:</span>
-                         <span className="text-3xl font-display tracking-tighter text-black">{finalTotal.toLocaleString()} so'm</span>
+                         <span className="text-xs font-black uppercase tracking-[0.2em] text-black">{t('checkout.total')}</span>
+                         <span className="text-3xl font-display tracking-tighter text-black">{finalTotal.toLocaleString()} {t('home.currency')}</span>
                        </div>
                     </div>
                   </div>
@@ -357,9 +363,9 @@ export default function CheckoutPage() {
                      className="w-full bg-black text-white py-7 rounded-2xl font-black uppercase text-[11px] tracking-[0.4em] shadow-2xl shadow-black/20 active:scale-[0.98] transition-all flex items-center justify-center gap-4 disabled:opacity-50"
                   >
                     {loading ? (
-                      <span className="flex items-center gap-3"><Zap className="w-4 h-4 animate-bounce" /> Tasdiqlanmoqda...</span>
+                      <span className="flex items-center gap-3"><Zap className="w-4 h-4 animate-bounce" /> {t('checkout.processing')}</span>
                     ) : (
-                      <>Buyurtma berish <ArrowRight className="w-5 h-5" /></>
+                      <>{t('checkout.place_order')} <ArrowRight className="w-5 h-5" /></>
                     )}
                   </button>
                 </div>
@@ -385,9 +391,9 @@ export default function CheckoutPage() {
                </div>
                
                <div className="space-y-4">
-                  <h2 className="font-display text-5xl md:text-6xl uppercase tracking-tighter leading-none text-black">Muvaffaqiyatli!</h2>
+                  <h2 className="font-display text-5xl md:text-6xl uppercase tracking-tighter leading-none text-black">{t('checkout.success_title')}</h2>
                   <p className="text-zinc-400 font-serif italic text-lg max-w-sm mx-auto leading-relaxed">
-                    Buyurtmangiz qabul qilindi. Operatorimiz yaqin 15 daqiqa ichida siz bilan bog'lanadi.
+                    {t('checkout.success_sub')}
                   </p>
                </div>
 
@@ -397,8 +403,8 @@ export default function CheckoutPage() {
                    <span className="text-black">#ZX-{Math.floor(Math.random() * 9000 + 1000)}</span>
                  </div>
                  <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">
-                   <span>Muddat:</span>
-                   <span className="text-black">1-2 ish kuni</span>
+                   <span>{t('checkout.delivery_address')}:</span>
+                   <span className="text-black">1-2 {t('product.fast_delivery_sub').split(' ')[1]}</span>
                  </div>
                </div>
 
@@ -406,7 +412,7 @@ export default function CheckoutPage() {
                   onClick={() => navigate('/')}
                   className="bg-black text-white px-12 py-6 rounded-2xl font-black text-[10px] uppercase tracking-[0.4em] shadow-2xl shadow-black/20 hover:scale-105 active:scale-95 transition-all"
                >
-                  Katalogga qaytish
+                  {t('checkout.back_home')}
                </button>
             </motion.div>
           )}

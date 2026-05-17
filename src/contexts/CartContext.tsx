@@ -44,20 +44,21 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [wishlist]);
 
   const addToCart = (product: Product, quantity = 1, size?: string, color?: string) => {
+    const normalizedProduct = { ...product, price: Number(product.price) || 0 };
     setCart(prev => {
       const existing = prev.find(item => 
-        item.id === product.id && 
+        item.id === normalizedProduct.id && 
         item.selectedSize === size && 
         item.selectedColor === color
       );
       if (existing) {
         return prev.map(item => 
-          (item.id === product.id && item.selectedSize === size && item.selectedColor === color)
+          (item.id === normalizedProduct.id && item.selectedSize === size && item.selectedColor === color)
             ? { ...item, quantity: item.quantity + quantity }
             : item
         );
       }
-      return [...prev, { ...product, quantity, selectedSize: size, selectedColor: color }];
+      return [...prev, { ...normalizedProduct, quantity, selectedSize: size, selectedColor: color }];
     });
   };
 
@@ -98,7 +99,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     return wishlist.some(p => p.id === productId);
   };
 
-  const cartTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const cartTotal = cart.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (

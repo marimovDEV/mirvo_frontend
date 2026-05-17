@@ -38,9 +38,9 @@ export default function ProfilePage() {
                 <Sparkles className="w-10 h-10 text-zinc-200" />
             </div>
             <div className="space-y-2">
-                <h2 className="text-3xl font-display uppercase tracking-tight text-black">Xush kelibsiz</h2>
+                <h2 className="text-3xl font-display uppercase tracking-tight text-black">{t('profile.welcome')}</h2>
                 <p className="text-zinc-400 font-medium max-w-[240px] mx-auto leading-relaxed">
-                  Profilizga kirish uchun tizimga kiring yoki ro'yxatdan o'ting.
+                  {t('profile.welcome_sub')}
                 </p>
             </div>
             <button
@@ -91,7 +91,7 @@ export default function ProfilePage() {
                 "absolute -bottom-2 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest border-2",
                 membershipColors[membership]
               )}>
-                {membership} Member
+                {membership === 'Gold' ? t('profile.gold_member') : membership === 'Silver' ? t('profile.silver_member') : t('profile.standard_member')}
               </div>
             </div>
             
@@ -122,7 +122,7 @@ export default function ProfilePage() {
                 <div className="w-8 h-8 bg-white/10 rounded-xl flex items-center justify-center">
                   <Wallet className="w-4 h-4 text-white/60" />
                 </div>
-                <p className="text-[10px] font-black uppercase tracking-widest text-white/50">Bonus balansi</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-white/50">{t('profile.bonus_balance')}</p>
               </div>
               <button 
                 onClick={() => setShowBonusInfo(!showBonusInfo)}
@@ -134,18 +134,18 @@ export default function ProfilePage() {
             
             <div className="space-y-1">
               <div className="flex items-end justify-between">
-                <h4 className="text-4xl font-display tracking-tight">{(user.bonusBalance || 0).toLocaleString()} so'm</h4>
+                <h4 className="text-4xl font-display tracking-tight">{(user.bonusBalance || 0).toLocaleString()} {t('home.currency')}</h4>
                 <div className="flex gap-2">
                    <button onClick={() => navigate('/orders')} className="bg-white/10 hover:bg-white/20 p-3 rounded-2xl transition-all">
                       <History className="w-4 h-4" />
                    </button>
                    <button onClick={() => navigate('/')} className="bg-white text-black px-6 py-3 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] hover:scale-105 active:scale-95 transition-all">
-                      Ishlatish
+                      {t('profile.use_bonus')}
                    </button>
                 </div>
               </div>
               <p className="text-[9px] font-black uppercase tracking-widest text-white/30 flex items-center gap-2">
-                <TrendingUp className="w-3 h-3" /> Har xariddan {cashbackRate}% keshbek
+                <TrendingUp className="w-3 h-3" /> {t('profile.cashback_note', { rate: cashbackRate })}
               </p>
             </div>
           </div>
@@ -159,7 +159,7 @@ export default function ProfilePage() {
                 className="relative z-10 pt-6 mt-6 border-t border-white/5 overflow-hidden"
               >
                 <p className="text-[10px] font-medium text-white/40 leading-relaxed uppercase tracking-wider">
-                  Bonuslar har bir buyurtmangizdan {cashbackRate}% miqdorida yig'iladi. 1 bonus = 1 so'm. Bonuslarni keyingi xaridlar uchun to'liq yoki qisman ishlatishingiz mumkin.
+                  {t('profile.bonus_info_text', { rate: cashbackRate })}
                 </p>
               </motion.div>
             )}
@@ -168,73 +168,73 @@ export default function ProfilePage() {
 
         {/* Orders Summary - REAL Logic placeholders */}
         <div className="grid grid-cols-3 gap-3">
-          <OrderStat icon={<Clock />} label="Aktiv" count={orderCount > 0 ? 1 : 0} onClick={() => navigate('/orders')} />
-          <OrderStat icon={<CheckCircle />} label="Bajarildi" count={orderCount} onClick={() => navigate('/orders')} />
-          <OrderStat icon={<Package />} label="Qaytarish" count={0} onClick={() => navigate('/orders')} />
+          <OrderStat icon={<Clock />} label={t('profile.active_orders')} count={orderCount > 0 ? 1 : 0} onClick={() => navigate('/orders')} />
+          <OrderStat icon={<CheckCircle />} label={t('profile.completed_orders')} count={orderCount} onClick={() => navigate('/orders')} />
+          <OrderStat icon={<Package />} label={t('profile.returns')} count={0} onClick={() => navigate('/orders')} />
         </div>
 
         {/* Menu Sections */}
         <div className="space-y-10">
-          <MenuSection title="Mening hisobim">
+          <MenuSection title={t('profile.my_account')}>
             <MenuItem 
               icon={<Package />} 
-              label="Buyurtmalarim" 
-              sub="Xaridlar tarixi va holati" 
+              label={t('profile.my_orders')} 
+              sub={t('profile.my_orders_sub')} 
               onClick={() => navigate('/orders')} 
             />
             <MenuItem 
               icon={<MapPin />} 
-              label="Manzillarim" 
-              sub="Yetkazib berish punktlari" 
+              label={t('profile.my_addresses')} 
+              sub={t('profile.my_addresses_sub')} 
               onClick={() => navigate('/addresses')} 
             />
             <MenuItem 
               icon={<Heart />} 
-              label="Sevimlilar" 
-              sub="Yoqtirgan mahsulotlaringiz" 
+              label={t('profile.favorites')} 
+              sub={t('profile.favorites_sub')} 
               onClick={() => navigate('/wishlist')} 
             />
             <MenuItem 
               icon={<CreditCard />} 
-              label="To'lov turlari" 
-              sub="Karta va tizimlar" 
+              label={t('profile.payment_methods')} 
+              sub={t('profile.payment_methods_sub')} 
               onClick={() => navigate('/payment-methods')} 
             />
           </MenuSection>
 
-          <MenuSection title="Xizmatlar">
+          <MenuSection title={t('profile.services')}>
             <MenuItem 
               icon={<Building2 />} 
-              label="Biznes uchun xarid" 
-              sub="Do'kon va jamoalar uchun" 
+              label={t('profile.b2b_title')} 
+              sub={t('profile.b2b_sub')} 
               onClick={() => navigate('/b2b')}
               highlight
             />
             <MenuItem 
               icon={<Languages />} 
-              label="Til (Language)" 
-              sub={i18n.language === 'uz' ? "O'zbekcha" : "Русский"} 
+              label={t('profile.language_title')} 
+              sub={i18n.language === 'uz' ? "O'zbekcha" : i18n.language === 'ru' ? "Русский" : "English"} 
               onClick={() => setShowLanguageModal(true)}
             />
             <MenuItem 
               icon={<Ticket />} 
-              label="Promokod" 
-              sub="Chegirma kuponlaringiz" 
+              label={t('profile.promocodes_title')} 
+              sub={t('profile.promocodes_sub')} 
               onClick={() => navigate('/promocodes')} 
             />
           </MenuSection>
 
-          <MenuSection title="Tizim">
+          <MenuSection title={t('profile.system')}>
             <MenuItem 
               icon={<Bell />} 
-              label="Bildirishnomalar" 
-              sub="Xabarlar sozlamalari" 
+              label={t('profile.notifications')} 
+              sub={t('profile.notifications_sub')} 
               onClick={() => navigate('/notifications')} 
             />
             <MenuItem 
               icon={<LogOut className="text-red-500" />} 
-              label="Chiqish" 
-              sub="Tizimdan xavfsiz chiqish" 
+              label={t('profile.logout_title')} 
+              sub={t('profile.logout_sub')} 
               onClick={logout} 
               noBorder 
             />
@@ -260,8 +260,8 @@ export default function ProfilePage() {
              >
                 <div className="w-12 h-1.5 bg-zinc-100 rounded-full mx-auto" />
                 <div className="space-y-2">
-                   <h2 className="text-3xl font-display uppercase tracking-tight">Tilni tanlang</h2>
-                   <p className="text-zinc-400 text-sm font-medium">Interfeys tilini o'zgartirish</p>
+                   <h2 className="text-3xl font-display uppercase tracking-tight">{t('profile.select_language')}</h2>
+                   <p className="text-zinc-400 text-sm font-medium">{t('profile.language_sub')}</p>
                 </div>
                 <div className="space-y-3">
                    <button 
@@ -283,6 +283,16 @@ export default function ProfilePage() {
                    >
                       Русский
                       {i18n.language === 'ru' && <CheckCircle size={16} />}
+                   </button>
+                   <button 
+                     onClick={() => { i18n.changeLanguage('en'); setShowLanguageModal(false); }}
+                     className={cn(
+                       "w-full p-6 rounded-2xl border flex items-center justify-between font-black text-xs uppercase tracking-widest transition-all",
+                       i18n.language === 'en' ? "border-black bg-black text-white" : "border-zinc-100 bg-zinc-50 text-black"
+                     )}
+                   >
+                      English
+                      {i18n.language === 'en' && <CheckCircle size={16} />}
                    </button>
                 </div>
              </motion.div>

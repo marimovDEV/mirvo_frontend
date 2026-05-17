@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { PRODUCTS } from '@/src/constants';
 import { productsApi, getMediaUrl } from '@/src/lib/api';
@@ -34,10 +35,10 @@ function CountdownTimer({ expiryDate }: { expiryDate: string }) {
   return (
     <div className="flex gap-2">
       {[
-        { label: 'kun', val: timeLeft.d },
-        { label: 'soat', val: timeLeft.h },
-        { label: 'daq', val: timeLeft.m },
-        { label: 'son', val: timeLeft.s },
+        { label: t('product.countdown_days'), val: timeLeft.d },
+        { label: t('product.countdown_hours'), val: timeLeft.h },
+        { label: t('product.countdown_mins'), val: timeLeft.m },
+        { label: t('product.countdown_secs'), val: timeLeft.s },
       ].map((item, i) => (
         <div key={i} className="bg-red-600 text-white p-2 rounded-xl min-w-[50px] text-center shadow-lg shadow-red-500/20">
           <div className="text-sm font-black leading-none">{item.val}</div>
@@ -60,16 +61,38 @@ export default function ProductDetailPage() {
   const [selectedSize, setSelectedSize] = useState('M');
   const [selectedColor, setSelectedColor] = useState('');
 
+  // Normalize product: ensure sizes, colors arrays exist
+  const normalizeProduct = (p: any) => {
+    if (!p) return p;
+    return {
+      ...p,
+      sizes: p.sizes && p.sizes.length > 0 ? p.sizes : ['S', 'M', 'L', 'XL'],
+      colors: p.colors && p.colors.length > 0 ? p.colors : ['#000000', '#FFFFFF'],
+      price: Number(p.price) || Number(p.salePrice) || 0,
+      salePrice: p.salePrice ? Number(p.salePrice) : null,
+      oldPrice: p.salePrice ? Number(p.price) : null,
+      rating: p.rating || 0,
+      reviews: p.reviews || p.reviews_count || 0,
+      stock: p.stock || 0,
+      brand: p.brand || 'MIRVO',
+      description: p.description || '',
+      image: p.image || (p.images && p.images[0]) || '',
+    };
+  };
+
   React.useEffect(() => {
     setLoading(true);
     productsApi.getOne(id!).then(res => {
-      setProduct(res);
-      if (res.colors?.length) setSelectedColor(res.colors[0]);
+      const normalized = normalizeProduct(res);
+      setProduct(normalized);
+      if (normalized.colors?.length) setSelectedColor(normalized.colors[0]);
+      if (normalized.sizes?.length) setSelectedSize(normalized.sizes[0]);
     }).catch(() => {
       // Fallback to static constants if API fails
       const fallback = PRODUCTS.find(p => p.id === id) || PRODUCTS[0];
-      setProduct(fallback);
-      if (fallback.colors?.length) setSelectedColor(fallback.colors[0]);
+      const normalized = normalizeProduct(fallback);
+      setProduct(normalized);
+      if (normalized.colors?.length) setSelectedColor(normalized.colors[0]);
     }).finally(() => setLoading(false));
   }, [id]);
 
@@ -115,11 +138,11 @@ export default function ProductDetailPage() {
                 <div className="absolute top-6 left-6 flex flex-col gap-2">
                    {product.isBestseller && (
                      <div className="bg-black text-white px-4 py-1.5 text-[9px] font-black uppercase tracking-[0.2em] shadow-2xl">
-                        Bestseller
+                        {t('product.bestseller')}
                      </div>
                    )}
                    <div className="bg-white text-black px-4 py-1.5 text-[9px] font-black uppercase tracking-[0.2em] shadow-2xl border border-black/5">
-                      New Collection
+                      {t('product.new_collection')}
                    </div>
                 </div>
              </motion.div>
@@ -141,16 +164,16 @@ export default function ProductDetailPage() {
                 <div className="flex items-center gap-3">
                     <p className="text-[11px] font-black text-zinc-300 uppercase tracking-[0.4em]">{product.brand}</p>
                     <div className="h-px w-8 bg-zinc-100" />
-                    <p className="text-[11px] font-black text-primary uppercase tracking-[0.2em]">Authentic Series</p>
+                    <p className="text-[11px] font-black text-primary uppercase tracking-[0.2em]">{t('product.authentic_series')}</p>
                 </div>
                 <h1 className="text-5xl md:text-7xl font-display uppercase tracking-tighter leading-none text-black">
                   {product.name}
                 </h1>
                 <div className="flex items-center gap-6">
                     <div className="flex items-baseline gap-2">
-                       <span className="text-3xl font-display tracking-tight text-black">{product.price.toLocaleString()} so'm</span>
+                       <span className="text-3xl font-display tracking-tight text-black">{Math.round(Number(product.price)).toLocaleString()} {t('home.currency')}</span>
                        {product.oldPrice && (
-                         <span className="text-sm text-zinc-300 line-through font-bold">{product.oldPrice.toLocaleString()} so'm</span>
+                         <span className="text-sm text-zinc-300 line-through font-bold">{Math.round(Number(product.oldPrice)).toLocaleString()} {t('home.currency')}</span>
                        )}
                     </div>
                     {product.oldPrice && (
@@ -167,8 +190,8 @@ export default function ProductDetailPage() {
                            <Clock size={20} />
                         </div>
                         <div className="space-y-0.5">
-                           <p className="text-[10px] font-black uppercase tracking-widest text-red-600">Aksiya tugashiga</p>
-                           <p className="text-[8px] font-bold text-red-400 uppercase">Shoshiling, mahsulot soni cheklangan!</p>
+                           <p className="text-[10px] font-black uppercase tracking-widest text-red-600">{t('product.action_finish')}</p>
+                           <p className="text-[8px] font-bold text-red-400 uppercase">{t('product.action_limit')}</p>
                         </div>
                      </div>
                      <CountdownTimer expiryDate={product.saleTimer} />
@@ -177,7 +200,7 @@ export default function ProductDetailPage() {
               </div>
               
               <p className="text-zinc-400 font-serif italic text-lg md:text-xl leading-relaxed max-w-md">
-                 Ushbu model o'zining bejirim dizayni va yuqori sifatli materiallari bilan MIRVO kolleksiyasining durdonasi hisoblanadi.
+                 {product.description || t('product.description_default')}
               </p>
             </div>
 
@@ -190,7 +213,7 @@ export default function ProductDetailPage() {
                   <button className="text-[10px] font-bold text-zinc-400 border-b border-zinc-200 uppercase tracking-widest">{t('product.size_guide')}</button>
                 </div>
                 <div className="flex flex-wrap gap-3">
-                    {product.sizes.map(size => (
+                    {(product.sizes || []).map((size: string) => (
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
@@ -209,7 +232,7 @@ export default function ProductDetailPage() {
               <div className="space-y-5">
                 <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-black">{t('product.select_color')}</h3>
                 <div className="flex gap-5">
-                  {product.colors.map(color => (
+                  {(product.colors || []).map((color: string) => (
                     <button 
                       key={color}
                       onClick={() => setSelectedColor(color)}
@@ -232,8 +255,8 @@ export default function ProductDetailPage() {
                       <Truck className="w-5 h-5 text-black" strokeWidth={1.5} />
                     </div>
                     <div className="space-y-0.5">
-                      <p className="text-[10px] font-black uppercase tracking-widest leading-none">Free Ship</p>
-                      <p className="text-[9px] font-bold text-zinc-400 uppercase tracking-tight">Across UZ</p>
+                      <p className="text-[10px] font-black uppercase tracking-widest leading-none">{t('home.trust_delivery')}</p>
+                      <p className="text-[9px] font-bold text-zinc-400 uppercase tracking-tight">{t('home.trust_delivery_time')}</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-4 p-5 bg-zinc-50 rounded-[2rem] border border-black/5">
@@ -241,8 +264,8 @@ export default function ProductDetailPage() {
                       <ShieldCheck className="w-5 h-5 text-black" strokeWidth={1.5} />
                     </div>
                     <div className="space-y-0.5">
-                      <p className="text-[10px] font-black uppercase tracking-widest leading-none">Secure</p>
-                      <p className="text-[9px] font-bold text-zinc-400 uppercase tracking-tight">Verified</p>
+                      <p className="text-[10px] font-black uppercase tracking-widest leading-none">{t('product.secure_payment')}</p>
+                      <p className="text-[9px] font-bold text-zinc-400 uppercase tracking-tight">{t('product.warranty_sub')}</p>
                     </div>
                 </div>
             </div>
@@ -255,7 +278,7 @@ export default function ProductDetailPage() {
                 <div className="space-y-6">
                     <h3 className="font-display text-4xl uppercase tracking-tighter text-black">{t('product.features')}</h3>
                     <p className="text-zinc-500 font-medium leading-relaxed text-lg max-w-2xl">
-                       Ushbu mahsulot MIRVO laboratoriyalarida sinovdan o'tkazilgan. Har bir detal sportchining qulayligi va harakat erkinligi uchun o'ylangan. Materiallar tana haroratini mo'tadillashtirishga yordam beradi.
+                       {t('product.features_desc')}
                     </p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -263,14 +286,14 @@ export default function ProductDetailPage() {
                         <TrendingUp className="text-black group-hover:text-white w-8 h-8 transition-colors" />
                         <div className="space-y-2">
                            <h4 className="font-black text-sm uppercase group-hover:text-white transition-colors">{t('product.bestseller')}</h4>
-                           <p className="text-xs font-bold text-zinc-400 group-hover:text-white/60 transition-colors">Ushbu hafta eng ko'p sotilganlar ro'yxatida.</p>
+                           <p className="text-xs font-bold text-zinc-400 group-hover:text-white/60 transition-colors">{t('home.popular')}</p>
                         </div>
                     </div>
                     <div className="p-8 bg-zinc-50 rounded-[2.5rem] border border-black/5 space-y-4 group hover:bg-black transition-colors duration-500">
                         <RefreshCcw className="text-black group-hover:text-white w-8 h-8 transition-colors" />
                         <div className="space-y-2">
-                           <h4 className="font-black text-sm uppercase group-hover:text-white transition-colors">10 Kunlik Qaytarish</h4>
-                           <p className="text-xs font-bold text-zinc-400 group-hover:text-white/60 transition-colors">Sifat yoqmasa yoki o'lcham tushmasa bemalol qaytaring.</p>
+                           <h4 className="font-black text-sm uppercase group-hover:text-white transition-colors">{t('home.trust_return')}</h4>
+                           <p className="text-xs font-bold text-zinc-400 group-hover:text-white/60 transition-colors">{t('product.return_policy_desc')}</p>
                         </div>
                     </div>
                 </div>
@@ -281,15 +304,15 @@ export default function ProductDetailPage() {
                 <div className="space-y-6">
                     <div className="flex justify-between border-b border-zinc-200 pb-4">
                         <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">{t('product.material')}</span>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-black">Premium Cotton Blend</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-black">{t('product.material_default')}</span>
                     </div>
                     <div className="flex justify-between border-b border-zinc-200 pb-4">
                         <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">{t('product.warranty')}</span>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-black">6 Months</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-black">{t('product.warranty_default')}</span>
                     </div>
                     <div className="flex justify-between border-b border-zinc-200 pb-4">
                         <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">{t('product.origin')}</span>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-black">Uzbekistan</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-black">{t('product.origin_default')}</span>
                     </div>
                 </div>
             </div>
@@ -310,7 +333,7 @@ export default function ProductDetailPage() {
            }}
            className="flex-1 bg-black text-white h-14 rounded-2xl font-black uppercase text-[10px] tracking-[0.3em] active:scale-[0.98] transition-all shadow-2xl shadow-black/20"
          >
-           Savatga — {(product.price * quantity).toLocaleString()}
+           {t('common.add_to_cart')} — {Math.round(Number(product.price) * quantity).toLocaleString()}
          </button>
       </div>
 

@@ -10,9 +10,11 @@ import { getMediaUrl } from '@/src/lib/api';
 
 export function ProductCard({ product, loading }: { product: Product, loading?: boolean, key?: any }) {
   const { addToCart, toggleWishlist, isInWishlist } = useCart();
+  const sizes = product.sizes || ['S', 'M', 'L', 'XL'];
+  const colors = product.colors || ['#000000'];
   const [showQuickAdd, setShowQuickAdd] = useState(false);
-  const [selectedSize, setSelectedSize] = useState(product.sizes[1] || product.sizes[0]);
-  const [selectedColor, setSelectedColor] = useState(product.colors[0]);
+  const [selectedSize, setSelectedSize] = useState(sizes[1] || sizes[0]);
+  const [selectedColor, setSelectedColor] = useState(colors[0]);
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -36,7 +38,7 @@ export function ProductCard({ product, loading }: { product: Product, loading?: 
     setShowQuickAdd(false);
   };
 
-  const formatPrice = (price: number) => new Intl.NumberFormat('uz-UZ').format(price);
+  const formatPrice = (price: number) => new Intl.NumberFormat('uz-UZ').format(Math.round(Number(price)));
 
   return (
     <>
@@ -96,10 +98,10 @@ export function ProductCard({ product, loading }: { product: Product, loading?: 
           <div className="mt-auto pt-2 flex items-center justify-between">
             <div className="flex items-center gap-1.5">
                <div className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
-               <span className="text-[8px] font-black uppercase tracking-widest text-emerald-500">{product.stock || '5'} dona qoldi</span>
+               <span className="text-[8px] font-black uppercase tracking-widest text-emerald-500">{product.stock || '5'} {t('product.stock_left')}</span>
             </div>
             {product.isBestseller && (
-              <span className="text-[8px] font-black uppercase tracking-widest text-primary bg-stone px-2 py-0.5 rounded-full">Bestseller</span>
+              <span className="text-[8px] font-black uppercase tracking-widest text-primary bg-stone px-2 py-0.5 rounded-full">{t('product.bestseller')}</span>
             )}
           </div>
         </div>
@@ -135,7 +137,7 @@ export function ProductCard({ product, loading }: { product: Product, loading?: 
                 <div className="space-y-2">
                   <p className="text-[10px] font-semibold uppercase tracking-wider text-black/40">{t('product.select_size')}</p>
                   <div className="flex gap-2">
-                    {product.sizes.map(s => (
+                    {sizes.map((s: string) => (
                       <button key={s} onClick={() => setSelectedSize(s)} className={cn(
                         "flex-1 py-2.5 text-xs font-medium transition-all active:scale-95",
                         selectedSize === s ? "bg-primary text-white" : "bg-stone text-black/50 hover:text-black"
@@ -164,19 +166,19 @@ export function WholesaleBanner() {
         <div className="relative z-10 p-8 md:p-16 flex flex-col justify-center space-y-4 md:space-y-6">
           <div className="flex items-center gap-3">
             <Building2 className="w-4 h-4 text-white/20" />
-            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] text-white/30">Hamkorlik</span>
+            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] text-white/30">{t('common.partnership')}</span>
           </div>
           <h2 className="font-display text-3xl md:text-5xl uppercase tracking-tighter leading-none">
             {t('b2b.home_title')}
           </h2>
           <p className="text-white/40 text-[11px] md:text-sm max-w-xs leading-relaxed font-medium">
-             Do'koningiz bormi? MIRVO bilan 1 oy bepul boshlang va ulgurji narxlarda hamkorlik qiling.
+             {t('b2b.home_sub')}
           </p>
           <Link
             to="/b2b"
             className="inline-flex items-center gap-3 bg-white text-black w-full md:w-fit justify-center px-8 py-4 md:py-3.5 font-black text-[10px] uppercase tracking-[0.3em] hover:bg-zinc-200 transition-all active:scale-95 rounded-2xl md:rounded-none"
           >
-            Seller bo'lish <ArrowRight className="w-4 h-4" />
+            {t('b2b.home_btn')} <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
         <div className="hidden md:block relative h-full">
