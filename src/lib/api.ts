@@ -1,5 +1,5 @@
 // MIRVO API Service
-const API_BASE = import.meta.env.VITE_API_URL || 'https://mapi.pizzacentergarden.uz/api/v1';
+const API_BASE = import.meta.env.VITE_API_URL || 'https://mirvo.tokyokafe.uz/api/v1';
 const MEDIA_BASE = API_BASE.replace('/api/v1', '');
 
 export const getMediaUrl = (url: string | null | undefined) => {
