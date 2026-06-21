@@ -17,7 +17,7 @@ export default function PromocodesPage() {
     setLoading(true);
     setError(false);
     try {
-      const res = await promoApi.getAll();
+      const res = await promoApi.getAvailable();
       setPromos(Array.isArray(res) ? res : []);
     } catch (err) {
       console.error('Promo load error:', err);

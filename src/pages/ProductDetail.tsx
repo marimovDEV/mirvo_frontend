@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { useCart } from '@/src/contexts/CartContext';
 
 function CountdownTimer({ expiryDate }: { expiryDate: string }) {
+  const { t } = useTranslation();
   const [timeLeft, setTimeLeft] = React.useState<{ d: number; h: number; m: number; s: number } | null>(null);
 
   React.useEffect(() => {

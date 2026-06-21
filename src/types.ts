@@ -1,8 +1,12 @@
 export interface Sport {
   id: string;
   name: string;
-  icon: string;
-  color: string; // Thematic color for the sport
+  icon?: string;
+  color?: string;
+  image?: string;
+  slug?: string;
+  order?: number;
+  isActive?: boolean;
   description?: string;
 }
 
