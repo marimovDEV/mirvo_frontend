@@ -378,11 +378,11 @@ export default function HomePage() {
                     </FooterSection>
                     <FooterSection title={t('home.footer_help_title')}>
                        {[
-                          { name: t('home.footer_help_delivery'), path: '#' },
-                          { name: t('home.footer_help_return'), path: '#' },
-                          { name: t('home.footer_help_contact'), path: '#' }
+                          { name: t('home.footer_help_delivery'), path: '/delivery' },
+                          { name: t('home.footer_help_return'), path: '/returns' },
+                          { name: t('home.footer_help_contact'), path: '/contact' }
                        ].map(l => (
-                          <li key={l.name}><a href={l.path} className="text-[11px] font-black text-black/40 hover:text-black uppercase tracking-widest">{l.name}</a></li>
+                          <li key={l.name}><button onClick={() => navigate(l.path)} className="text-[11px] font-black text-black/40 hover:text-black uppercase tracking-widest">{l.name}</button></li>
                         ))}
                     </FooterSection>
                  </div>

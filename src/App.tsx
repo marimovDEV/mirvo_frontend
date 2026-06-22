@@ -22,6 +22,9 @@ import CatalogPage from './pages/CatalogPage';
 import DealsPage from './pages/DealsPage';
 import SportHubPage from './pages/SportHubPage';
 import CategoriesPage from './pages/CategoriesPage';
+import DeliveryPage from './pages/DeliveryPage';
+import ReturnsPage from './pages/ReturnsPage';
+import ContactPage from './pages/ContactPage';
 
 // Profile Sub-pages
 import OrdersPage from './pages/OrdersPage';
@@ -71,6 +74,9 @@ export default function App() {
             <Route path="/b2b" element={<B2BPage />} />
             <Route path="/categories" element={<CategoriesPage />} />
             <Route path="/auth" element={<AuthPage />} />
+            <Route path="/delivery" element={<DeliveryPage />} />
+            <Route path="/returns" element={<ReturnsPage />} />
+            <Route path="/contact" element={<ContactPage />} />
 
             {/* Admin Screens */}
             <Route path="/admin" element={<AdminDashboard />} />

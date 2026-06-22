@@ -289,6 +289,20 @@
     "name": "Ismingiz",
     "phone": "Telefon raqamingiz",
     "submit": "Ariza yuborish",
-    "success": "Qabul qilindi! Tez orada menejerimiz bog'lanadi."
+    "success": "Qabul qilindi! Tez orada menejerimiz bog'lanadi.",
+    "city": "Shahar/Viloyat",
+    "business_types": {
+      "shop": "Do'kon egasi",
+      "team": "Sport jamoasi",
+      "distributor": "Distribyutor"
+    }
+  },
+  "pages": {
+    "delivery_title": "Yetkazib berish",
+    "delivery_content": "Biz O'zbekiston bo'ylab barcha hududlarga yetkazib beramiz. Toshkent shahri ichida 1 kun, boshqa viloyatlarga 2-3 ish kunida yetkaziladi.",
+    "returns_title": "Mahsulotni qaytarish",
+    "returns_content": "Agar mahsulot sizga mos kelmasa, 10 kun ichida qaytarishingiz yoki almashtirishingiz mumkin. Mahsulotning asl holati saqlangan bo'lishi kerak.",
+    "contact_title": "Bog'lanish",
+    "contact_content": "Savollaringiz bo'lsa biz bilan bog'laning:\\nTelefon: +998 90 123 45 67\\nManzil: Toshkent sh., Chilonzor tumani\\nTelegram: @mirvo_support"
   }
 }

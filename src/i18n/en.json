@@ -290,6 +290,20 @@
     "name": "Your name",
     "phone": "Your phone number",
     "submit": "Submit application",
-    "success": "Received! Our manager will contact you shortly."
+    "success": "Received! Our manager will contact you shortly.",
+    "city": "City/Region",
+    "business_types": {
+      "shop": "Shop owner",
+      "team": "Sports team",
+      "distributor": "Distributor"
+    }
+  },
+  "pages": {
+    "delivery_title": "Delivery",
+    "delivery_content": "We deliver to all regions across Uzbekistan. 1 day within Tashkent, 2-3 working days to other regions.",
+    "returns_title": "Returns",
+    "returns_content": "If the product doesn't fit, you can return or exchange it within 10 days. Original condition must be preserved.",
+    "contact_title": "Contact Us",
+    "contact_content": "If you have questions, please contact us:\\nPhone: +998 90 123 45 67\\nAddress: Tashkent city, Chilanzar district\\nTelegram: @mirvo_support"
   }
 }
