@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { PRODUCTS } from '@/src/constants';
 import { productsApi, getMediaUrl } from '@/src/lib/api';
 import { MarketHeader, MarketBottomNav } from '@/src/components/Navigation';
-import { ChevronLeft, Truck, Heart, Minus, Plus, TrendingUp, ShieldCheck, RefreshCcw, Zap, Clock } from 'lucide-react';
+import { ChevronLeft, Truck, Heart, Minus, Plus, TrendingUp, ShieldCheck, RefreshCcw, Zap, Clock, Check, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/src/lib/utils';
 import { useTranslation } from 'react-i18next';
@@ -61,6 +61,15 @@ export default function ProductDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState('M');
   const [selectedColor, setSelectedColor] = useState('');
+  const [showToast, setShowToast] = useState(false);
+  const [featuresOpen, setFeaturesOpen] = useState(true);
+  const [specsOpen, setSpecsOpen] = useState(true);
+
+  const handleAddToCart = () => {
+    addToCart(product, quantity, selectedSize, selectedColor);
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000);
+  };
 
   // Normalize product: ensure sizes, colors arrays exist
   const normalizeProduct = (p: any) => {
@@ -220,7 +229,7 @@ export default function ProductDetailPage() {
                       onClick={() => setSelectedSize(size)}
                       className={cn(
                         "flex-1 min-w-[70px] py-4 rounded-2xl border-2 text-[11px] font-black uppercase tracking-widest transition-all duration-300",
-                        selectedSize === size ? "bg-black text-white border-black shadow-2xl" : "bg-white text-zinc-400 border-zinc-100 hover:border-zinc-300"
+                        selectedSize === size ? "bg-black text-white border-black shadow-xl shadow-[var(--color-accent)]/20" : "bg-white text-zinc-400 border-zinc-100 hover:border-zinc-300 hover:-translate-y-0.5"
                       )}
                     >
                       {size}
@@ -239,7 +248,7 @@ export default function ProductDetailPage() {
                       onClick={() => setSelectedColor(color)}
                       className={cn(
                         "w-12 h-12 rounded-full border-2 transition-all p-1 flex items-center justify-center",
-                        selectedColor === color ? "border-black scale-110" : "border-transparent opacity-30 hover:opacity-100"
+                        selectedColor === color ? "border-[var(--color-accent)] scale-110 shadow-lg shadow-[var(--color-accent)]/30" : "border-transparent opacity-30 hover:opacity-100 hover:scale-105"
                       )}
                     >
                       <div className="w-full h-full rounded-full shadow-inner" style={{ backgroundColor: color }} />
@@ -274,48 +283,78 @@ export default function ProductDetailPage() {
         </div>
 
         {/* Specs & Features */}
-        <div className="mt-32 pt-20 border-t border-zinc-100 grid grid-cols-1 lg:grid-cols-12 gap-12 md:gap-20">
-            <div className="lg:col-span-8 space-y-12">
-                <div className="space-y-6">
-                    <h3 className="font-display text-4xl uppercase tracking-tighter text-black">{t('product.features')}</h3>
-                    <p className="text-zinc-500 font-medium leading-relaxed text-lg max-w-2xl">
-                       {t('product.features_desc')}
-                    </p>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div className="p-8 bg-zinc-50 rounded-[2.5rem] border border-black/5 space-y-4 group hover:bg-black transition-colors duration-500">
-                        <TrendingUp className="text-black group-hover:text-white w-8 h-8 transition-colors" />
-                        <div className="space-y-2">
-                           <h4 className="font-black text-sm uppercase group-hover:text-white transition-colors">{t('product.bestseller')}</h4>
-                           <p className="text-xs font-bold text-zinc-400 group-hover:text-white/60 transition-colors">{t('home.popular')}</p>
-                        </div>
-                    </div>
-                    <div className="p-8 bg-zinc-50 rounded-[2.5rem] border border-black/5 space-y-4 group hover:bg-black transition-colors duration-500">
-                        <RefreshCcw className="text-black group-hover:text-white w-8 h-8 transition-colors" />
-                        <div className="space-y-2">
-                           <h4 className="font-black text-sm uppercase group-hover:text-white transition-colors">{t('home.trust_return')}</h4>
-                           <p className="text-xs font-bold text-zinc-400 group-hover:text-white/60 transition-colors">{t('product.return_policy_desc')}</p>
-                        </div>
-                    </div>
-                </div>
+        <div className="mt-32 pt-10 border-t border-zinc-100 grid grid-cols-1 lg:grid-cols-12 gap-12 md:gap-20">
+            <div className="lg:col-span-8 space-y-6">
+                <button 
+                  onClick={() => setFeaturesOpen(!featuresOpen)} 
+                  className="w-full flex items-center justify-between font-display text-3xl md:text-4xl uppercase tracking-tighter text-black py-4 border-b border-zinc-100 hover:text-[var(--color-accent)] transition-colors"
+                >
+                  <span>{t('product.features')}</span>
+                  {featuresOpen ? <ChevronUp /> : <ChevronDown />}
+                </button>
+                <AnimatePresence>
+                  {featuresOpen && (
+                    <motion.div 
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      className="overflow-hidden space-y-12"
+                    >
+                      <p className="text-zinc-500 font-medium leading-relaxed text-lg max-w-2xl mt-6">
+                         {t('product.features_desc')}
+                      </p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                          <div className="p-8 bg-zinc-50 rounded-[2.5rem] border border-black/5 space-y-4 group hover:bg-[var(--color-accent)] transition-colors duration-500">
+                              <TrendingUp className="text-black group-hover:text-white w-8 h-8 transition-colors" />
+                              <div className="space-y-2">
+                                 <h4 className="font-black text-sm uppercase group-hover:text-white transition-colors">{t('product.bestseller')}</h4>
+                                 <p className="text-xs font-bold text-zinc-400 group-hover:text-white/80 transition-colors">{t('home.popular')}</p>
+                              </div>
+                          </div>
+                          <div className="p-8 bg-zinc-50 rounded-[2.5rem] border border-black/5 space-y-4 group hover:bg-[var(--color-accent)] transition-colors duration-500">
+                              <RefreshCcw className="text-black group-hover:text-white w-8 h-8 transition-colors" />
+                              <div className="space-y-2">
+                                 <h4 className="font-black text-sm uppercase group-hover:text-white transition-colors">{t('home.trust_return')}</h4>
+                                 <p className="text-xs font-bold text-zinc-400 group-hover:text-white/80 transition-colors">{t('product.return_policy_desc')}</p>
+                              </div>
+                          </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
             </div>
             
-            <div className="lg:col-span-4 bg-zinc-50 p-10 rounded-[3rem] border border-black/5 h-fit">
-                <h4 className="font-black text-[11px] uppercase tracking-[0.3em] text-zinc-300 mb-8">{t('product.specs')}</h4>
-                <div className="space-y-6">
-                    <div className="flex justify-between border-b border-zinc-200 pb-4">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">{t('product.material')}</span>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-black">{t('product.material_default')}</span>
-                    </div>
-                    <div className="flex justify-between border-b border-zinc-200 pb-4">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">{t('product.warranty')}</span>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-black">{t('product.warranty_default')}</span>
-                    </div>
-                    <div className="flex justify-between border-b border-zinc-200 pb-4">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">{t('product.origin')}</span>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-black">{t('product.origin_default')}</span>
-                    </div>
-                </div>
+            <div className="lg:col-span-4 bg-zinc-50 p-8 rounded-[3rem] border border-black/5 h-fit">
+                <button 
+                  onClick={() => setSpecsOpen(!specsOpen)} 
+                  className="w-full flex items-center justify-between font-black text-[11px] uppercase tracking-[0.3em] text-zinc-400 mb-4 hover:text-[var(--color-accent)] transition-colors"
+                >
+                  <span>{t('product.specs')}</span>
+                  {specsOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                </button>
+                <AnimatePresence>
+                  {specsOpen && (
+                    <motion.div 
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      className="overflow-hidden space-y-6 pt-4"
+                    >
+                      <div className="flex justify-between border-b border-zinc-200 pb-4">
+                          <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">{t('product.material')}</span>
+                          <span className="text-[10px] font-black uppercase tracking-widest text-black">{t('product.material_default')}</span>
+                      </div>
+                      <div className="flex justify-between border-b border-zinc-200 pb-4">
+                          <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">{t('product.warranty')}</span>
+                          <span className="text-[10px] font-black uppercase tracking-widest text-black">{t('product.warranty_default')}</span>
+                      </div>
+                      <div className="flex justify-between border-b border-zinc-200 pb-4">
+                          <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">{t('product.origin')}</span>
+                          <span className="text-[10px] font-black uppercase tracking-widest text-black">{t('product.origin_default')}</span>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
             </div>
         </div>
       </main>
@@ -328,15 +367,26 @@ export default function ProductDetailPage() {
             <button onClick={() => setQuantity(quantity + 1)} className="p-2 active:scale-75 transition-transform"><Plus className="w-4 h-4" /></button>
          </div>
          <button
-           onClick={() => {
-             addToCart(product, quantity, selectedSize, selectedColor);
-             navigate('/cart');
-           }}
+           onClick={handleAddToCart}
            className="flex-1 bg-black text-white h-14 rounded-2xl font-black uppercase text-[10px] tracking-[0.3em] active:scale-[0.98] transition-all shadow-2xl shadow-black/20"
          >
            {t('common.add_to_cart')} — {Math.round(Number(product.price) * quantity).toLocaleString()}
          </button>
       </div>
+
+      <AnimatePresence>
+        {showToast && (
+          <motion.div 
+            initial={{ opacity: 0, y: 50, x: '-50%' }}
+            animate={{ opacity: 1, y: 0, x: '-50%' }}
+            exit={{ opacity: 0, y: 50, x: '-50%' }}
+            className="fixed bottom-24 left-1/2 bg-[var(--color-accent)] text-white px-6 py-3 rounded-full flex items-center gap-3 z-[70] shadow-2xl shadow-[var(--color-accent)]/30"
+          >
+            <Check className="w-4 h-4 text-white" />
+            <span className="text-[11px] font-black uppercase tracking-widest">{t('product.added_to_cart', 'Savatga qo\'shildi')}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <MarketBottomNav />
     </div>

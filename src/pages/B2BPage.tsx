@@ -62,9 +62,9 @@ export default function B2BPage() {
                     <a 
                       href="https://t.me/mirvo_b2b" 
                       target="_blank"
-                      className="w-full flex items-center justify-center gap-3 py-5 bg-zinc-50 border border-zinc-100 rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] hover:bg-zinc-100 transition-all"
+                      className="w-full flex items-center justify-center gap-3 py-5 bg-[#0088cc] text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] hover:bg-[#0077b3] transition-all shadow-lg shadow-[#0088cc]/20"
                     >
-                      <MessageCircle className="w-4 h-4" /> Telegram
+                      <MessageCircle className="w-4 h-4 text-white" /> Telegram
                     </a>
                  </div>
               </section>

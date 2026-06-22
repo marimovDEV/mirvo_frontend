@@ -186,8 +186,8 @@ export default function HomePage() {
                   className={cn(
                     "flex-shrink-0 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all",
                     activeCategory === cat.id 
-                      ? "bg-black text-white shadow-xl shadow-black/20" 
-                      : "bg-zinc-50 text-zinc-400 border border-zinc-100 hover:border-black/20 hover:text-black"
+                      ? "bg-black text-white shadow-xl shadow-black/20 scale-105" 
+                      : "bg-zinc-50 text-zinc-400 border border-zinc-100 hover:border-black/20 hover:text-black hover:-translate-y-0.5 hover:shadow-md"
                   )}
                 >
                   {t(`categories.${cat.id}`)}
@@ -249,8 +249,8 @@ export default function HomePage() {
            <div className="max-w-screen-xl mx-auto px-4 md:px-8 relative z-10">
               <div className="flex flex-col md:flex-row items-center justify-between gap-10">
                  <div className="space-y-6 text-center md:text-left">
-                    <div className="bg-white/10 w-fit px-4 py-2 rounded-full border border-white/10 flex items-center gap-3 mx-auto md:mx-0">
-                       <Clock className="w-4 h-4 text-white" />
+                    <div className={cn("w-fit px-4 py-2 rounded-full border flex items-center gap-3 mx-auto md:mx-0 transition-colors", timeLeft < 3600 ? "bg-red-500/20 border-red-500/50 text-red-400" : "bg-white/10 border-white/10 text-white")}>
+                       <Clock className={cn("w-4 h-4", timeLeft < 3600 ? "text-red-400" : "text-white")} />
                        <span className="text-[10px] font-black uppercase tracking-widest">{formatTime(timeLeft)}</span>
                     </div>
                     <h2 className="text-5xl md:text-7xl font-display uppercase tracking-tighter leading-none">

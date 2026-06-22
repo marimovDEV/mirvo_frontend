@@ -44,7 +44,7 @@ export function ProductCard({ product, loading }: { product: Product, loading?: 
     <>
       <div
         onClick={() => navigate(`/product/${product.id}`)}
-        className="group flex flex-col cursor-pointer h-full relative"
+        className="group flex flex-col cursor-pointer h-full relative hover:-translate-y-1 transition-transform duration-300"
       >
         {/* Image container */}
         <div className="relative aspect-[3/4] overflow-hidden bg-stone">
